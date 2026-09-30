@@ -75,8 +75,13 @@ def test_interview_finish_creates_draft_plan_visible_only_to_curator(client, db_
     login(client, curator.email)
     resp = client.get(f"/api/plans/{family.id}")
     assert resp.status_code == 200, resp.text
-    assert resp.json()["status"] == "draft"
-    assert len(resp.json()["steps"]) >= 1
+    body = resp.json()
+    assert body["status"] == "draft"
+    assert len(body["steps"]) >= 1
+    # К7 (раздел 20): у каждого шага есть объяснение на ru и kk.
+    for step in body["steps"]:
+        assert step["explanation_ru"], step["step_id"]
+        assert step["explanation_kk"], step["step_id"]
 
 
 def test_home_vs_school_day_place_changes_question_set(client, db_session):

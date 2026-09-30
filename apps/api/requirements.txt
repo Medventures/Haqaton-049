@@ -15,3 +15,6 @@ openai
 pdfplumber
 weasyprint
 APScheduler
+# Supabase Postgres на деплое (раздел 2) — не тестировался в этом
+# окружении (нет живого Postgres), локально/в тестах используется SQLite.
+psycopg[binary]

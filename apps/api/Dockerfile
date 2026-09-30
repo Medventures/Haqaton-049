@@ -1,10 +1,10 @@
 # Раздел 2 SPEC.md: "API на любом хостинге с Docker (Render, Railway, Fly)".
 # Собирается из корня репозитория: docker build -f apps/api/Dockerfile .
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 # Системные библиотеки WeasyPrint (раздел 17) и шрифты для кириллицы/kk.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libcairo2 \
+    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 libcairo2 \
     fonts-liberation fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 

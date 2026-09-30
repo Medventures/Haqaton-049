@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.errors import bad_request, conflict, not_found
+from app.errors import AppError, bad_request, conflict, not_found
 from app.models import CasePlan, Family, User
 from app.modules.notifications.service import notify
 from app.modules.plans.transitions import validate_transition
@@ -64,7 +64,11 @@ def get_plan_for_parent(db: Session, family: Family, user_id: int) -> CasePlan:
     if family.parent_id != user_id:
         raise not_found("Семья не найдена")
     plan = get_latest_plan(db, family.id)
-    if plan is None or plan.status == "draft":
+    if plan is None:
+        # Отдельный код: web отправляет родителя на интервью, а не на экран
+        # ожидания куратора.
+        raise AppError(404, "no_plan", "План ещё не построен: сначала пройдите интервью")
+    if plan.status == "draft":
         raise not_found("План ещё не готов")
     return plan
 

@@ -64,6 +64,20 @@ def test_parent_cannot_see_draft_plan(client, db_session):
     login(client, parent.email)
     resp = client.get(f"/api/plans/{family.id}")
     assert resp.status_code == 404, resp.text
+    assert resp.json()["error"]["code"] == "not_found"
+
+
+def test_parent_without_plan_gets_no_plan_code(client, db_session):
+    # Web по коду no_plan отправляет родителя на интервью, а не на экран
+    # ожидания куратора.
+    curator = make_curator(db_session)
+    parent = make_parent(db_session)
+    family = make_family(db_session, curator, parent)
+
+    login(client, parent.email)
+    resp = client.get(f"/api/plans/{family.id}")
+    assert resp.status_code == 404, resp.text
+    assert resp.json()["error"]["code"] == "no_plan"
 
 
 def test_parent_sees_plan_once_approved(client, db_session):

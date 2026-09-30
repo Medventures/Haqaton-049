@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import type { PlanJson } from "@/lib/types";
 import { AGENCY_ICON } from "@/components/icons";
@@ -13,6 +14,7 @@ export default function PlanPage() {
   const t = useTranslations("plan");
   const tAgency = useTranslations("agency");
   const locale = useLocale() as "ru" | "kk";
+  const router = useRouter();
   const [family, setFamily] = useState<{ id: number } | null>(null);
   const [plan, setPlan] = useState<PlanJson | null | "draft">(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +28,9 @@ export default function PlanPage() {
       })
       .then(setPlan)
       .catch((e) => {
-        if (e instanceof ApiError && e.status === 404) {
+        if (e instanceof ApiError && e.code === "no_plan") {
+          router.replace(`/${locale}/interview`);
+        } else if (e instanceof ApiError && e.status === 404) {
           setPlan(e.code === "not_found" ? "draft" : null);
         } else {
           setError(String(e));

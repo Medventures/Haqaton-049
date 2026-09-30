@@ -1,0 +1,22 @@
+# Быстрый демо-деплой: render.com → New → Blueprint → этот репозиторий.
+# Один контейнер (deploy/Dockerfile): сайт + API + SQLite. Данные
+# сбрасываются при перезапуске, демо-аккаунты создаются заново.
+services:
+  - type: web
+    name: medhub
+    runtime: docker
+    plan: free
+    dockerfilePath: ./deploy/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEMO_MODE
+        value: "true"
+      - key: DEMO_PASSWORD
+        value: demo2026
+      - key: MAIL_MODE
+        value: console
+      - key: DATABASE_URL
+        value: sqlite:///./aqylroute.db

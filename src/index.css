@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme
+{
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: oklch(0.145 0 0);
+  --color-foreground: oklch(0.985 0 0);
+  --color-muted: oklch(0.269 0 0);
+  --color-muted-foreground: oklch(0.708 0 0);
+  --color-border: oklch(0.269 0 0);
+  --color-accent: oklch(0.7 0.16 250);
+}
+
+@layer base
+{
+  *
+  {
+    @apply border-border;
+  }
+
+  body
+  {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}

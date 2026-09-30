@@ -46,23 +46,14 @@ Fly/Supabase и сети до них из песочницы агента). Ло
    обязательно для генерации `public/sw.js` (раздел 16.2).
 4. Vercel сам выдаёт HTTPS-домен — требование PWA выполняется автоматически.
 
-## 3a. Альтернатива — один проект Vercel с сервисами
+## 3a. vercel.json
 
-Корневой `vercel.json` описывает два сервиса: `web` (`apps/web`, Next.js,
-публичный на `/`) и `api` (`apps/api`, FastAPI, публичный на `/api/*`).
-Браузер ходит в `/api/*` того же домена, поэтому bindings не нужны, а
-rewrite в `next.config.ts` на Vercel отключается (`process.env.VERCEL`).
-Локально всё вместе запускается через `vercel dev`.
-
-Ограничения, которые нужно проверить до выбора этого варианта:
-- справочники из `data/` лежат вне `apps/api`; если они не попадут в
-  бандл функции, задать `DATA_DIR` (см. `app/paths.py`);
-- WeasyPrint (PDF, раздел 17) требует системных pango/cairo, которых нет
-  в Python-рантайме Vercel;
-- APScheduler (почасовой тик эскалации) в serverless не работает, нужен
-  Vercel Cron;
-- SQLite не подходит, нужен `DATABASE_URL` на Supabase; миграции
-  (`alembic upgrade head`) и сид запускаются отдельно.
+Корневой `vercel.json` описывает проект Vercel в режиме сервисов с одним
+сервисом `web` (`apps/web`), публичным на `/`. API на Vercel не
+деплоится: WeasyPrint требует системных pango/cairo, а APScheduler
+(почасовой тик эскалации) не работает в serverless — поэтому API остаётся
+в Docker (шаг 2), а `/api/*` проксируется rewrite из `next.config.ts` на
+`API_URL`. Без `API_URL` сборка на Vercel падает намеренно.
 
 ## 4. Чек-лист после деплоя (раздел 20)
 

@@ -6,7 +6,8 @@ from app.auth import require_role
 from app.config import get_settings
 from app.db import get_db
 from app.errors import forbidden
-from app.models import Escalation, Outbox, Setting, User
+from app.models import Escalation, Family, Outbox, Setting, User
+from app.modules.scheduler.escalation import revert_time_shift
 from app import clock
 
 router = APIRouter(tags=["demo"])
@@ -19,6 +20,13 @@ def _require_demo_mode():
 
 class TimeShiftRequest(BaseModel):
     offset_days: int
+
+
+@router.get("/demo/state")
+def state(db: Session = Depends(get_db), curator: User = Depends(require_role("curator"))):
+    """Для демо-панели (раздел 15.2): текущая дата приложения и сдвиг."""
+    _require_demo_mode()
+    return {"time_offset_days": clock.get_time_offset_days(db), "today": clock.today(db).isoformat()}
 
 
 @router.post("/demo/time-shift")
@@ -44,6 +52,8 @@ def reset(db: Session = Depends(get_db), curator: User = Depends(require_role("c
         row.value = "0"
     db.query(Escalation).delete()
     db.commit()
+    for family in db.query(Family).all():
+        revert_time_shift(db, family)
     return {"ok": True}
 
 

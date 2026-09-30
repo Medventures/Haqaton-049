@@ -36,3 +36,31 @@ export type PlanJson = {
   approved_by: number | null;
   approved_at: string | null;
 };
+
+export type DocumentTypeRef = {
+  doc_type: string;
+  title_ru: string;
+  title_kk: string;
+  issuer_ru: string | null;
+  issuer_kk: string | null;
+  validity_ru: string | null;
+  validity_kk: string | null;
+};
+
+export type ProviderRef = {
+  provider_id: string;
+  name_ru: string;
+  name_kk: string;
+  address_ru: string | null;
+  address_kk: string | null;
+  phone: string | null;
+  hours_ru: string | null;
+  hours_kk: string | null;
+  booking_methods: string[] | null;
+};
+
+export type Reference = {
+  today: string;
+  document_types: Record<string, DocumentTypeRef>;
+  providers: Record<string, ProviderRef>;
+};

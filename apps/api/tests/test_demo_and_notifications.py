@@ -8,6 +8,7 @@ def test_demo_endpoints_require_demo_mode(client, db_session, monkeypatch):
     login(client, curator.email)
     resp = client.post("/api/demo/time-shift", json={"offset_days": 10})
     assert resp.status_code == 403
+    assert client.get("/api/demo/state").status_code == 403
 
 
 def test_demo_time_shift_and_dev_mail(client, db_session, monkeypatch):
@@ -20,6 +21,10 @@ def test_demo_time_shift_and_dev_mail(client, db_session, monkeypatch):
     resp = client.post("/api/demo/time-shift", json={"offset_days": 15})
     assert resp.status_code == 200, resp.text
     assert resp.json()["time_offset_days"] == 15
+
+    state = client.get("/api/demo/state").json()
+    assert state["time_offset_days"] == 15
+    assert state["today"] == resp.json()["today"]
 
     resp = client.get("/api/dev/mail")
     assert resp.status_code == 200

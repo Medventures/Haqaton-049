@@ -163,6 +163,34 @@ def recompute_family(db: Session, family: Family, catalog, today: date | None = 
     return {"changed": changed, "plan": plan}
 
 
+def revert_time_shift(db: Session, family: Family) -> None:
+    """Демо-сброс (раздел 15.2): откатить то, что сделал пересчёт после
+    сдвига времени, — системные переходы в overdue, уровни эскалации и сроки
+    шагов, пересчитанные из-за просроченной зависимости."""
+    plan = get_latest_plan(db, family.id)
+    if plan is None or plan.status not in ("draft", "approved"):
+        return
+    steps = copy.deepcopy(plan.plan_json["steps"])
+    system_overdue = set()
+    for step in steps:
+        history = list(step.get("status_history", []))
+        auto = [h for h in history if h.get("actor_role") == "system" and h.get("to") == "overdue"]
+        if auto:
+            system_overdue.add(step["step_id"])
+            if step["status"] == "overdue":
+                step["status"] = auto[0]["from"]
+            step["status_history"] = [h for h in history if h not in auto]
+        step["escalation_level"] = 0
+    for step in steps:
+        if step.get("original_deadline") and any(d in system_overdue for d in step["depends_on"]):
+            step["deadline"] = step["original_deadline"]
+    new_plan_json = dict(plan.plan_json)
+    new_plan_json["steps"] = steps
+    plan.plan_json = new_plan_json
+    db.add(plan)
+    db.commit()
+
+
 def _topo_order(steps_by_id: dict) -> list[str]:
     order = []
     visited = set()

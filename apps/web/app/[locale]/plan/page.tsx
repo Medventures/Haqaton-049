@@ -9,6 +9,8 @@ import type { PlanJson } from "@/lib/types";
 import { AGENCY_ICON } from "@/components/icons";
 import { StatusBadge } from "@/components/StatusBadge";
 import { AppChrome } from "@/components/AppChrome";
+import { ParentNav } from "@/components/ParentNav";
+import { formatDate } from "@/lib/parent";
 
 export default function PlanPage() {
   const t = useTranslations("plan");
@@ -91,6 +93,7 @@ export default function PlanPage() {
         })}
       </section>
       </div>
+      <ParentNav current="plan" />
     </main>
   );
 }
@@ -104,6 +107,9 @@ function StepRow({ step, familyId, locale }: { step: PlanJson["steps"][number]; 
     >
       <div>
         <p className="font-medium">{step[`title_${locale}`]}</p>
+        {step.deadline && step.status !== "overdue" && (
+          <p className="text-xs text-muted mt-0.5">{formatDate(step.deadline, locale)}</p>
+        )}
         {step.status === "overdue" && step.deadline !== step.original_deadline && (
           <p className="text-xs text-danger mt-0.5">
             {t("wasLabel")} {step.original_deadline} → {t("nowLabel")} {step.deadline}

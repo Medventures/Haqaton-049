@@ -151,3 +151,18 @@ def test_delete_step_only_in_draft(client, db_session):
     login(client, curator.email)
     resp = client.delete(f"/api/plans/{family.id}/steps/S1")
     assert resp.status_code == 409, resp.text
+
+
+def test_reference_returns_today_docs_and_providers(client, db_session):
+    parent = make_parent(db_session)
+    login(client, parent.email)
+    resp = client.get("/api/catalog/reference")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert len(body["today"]) == 10
+    assert body["document_types"]["birth_cert"]["title_ru"]
+    assert all("name_ru" in p for p in body["providers"].values())
+
+
+def test_reference_requires_login(client):
+    assert client.get("/api/catalog/reference").status_code == 401

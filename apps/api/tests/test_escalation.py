@@ -56,3 +56,27 @@ def test_time_shift_escalation_levels(db_session, offset_days, today_str, expect
 
     assert s2["service_id"] == "EDU_ASSISTANT"
     assert s2["deadline"] == expected_s2_deadline
+
+
+def test_revert_time_shift_restores_plan(db_session):
+    """Демо-сброс откатывает просрочки, уровни эскалации и сдвинутые сроки."""
+    from app.modules.scheduler.escalation import revert_time_shift
+
+    catalog = get_catalog()
+    curator = make_curator(db_session)
+    parent = make_parent(db_session)
+    family = make_family(db_session, curator, parent)
+    steps = build_plan(CASE_B["profile_expected"], catalog, date.fromisoformat(CASE_B["computed_at"]))
+    create_draft_plan(db_session, family.id, steps, computed_at=CASE_B["computed_at"])
+    approve_plan(db_session, family, curator.id)
+    before = {s["step_id"]: s for s in get_latest_plan(db_session, family.id).plan_json["steps"]}
+
+    recompute_family(db_session, family, catalog, today=date.fromisoformat("2026-11-20"))
+    revert_time_shift(db_session, family)
+
+    db_session.expire_all()
+    after = {s["step_id"]: s for s in get_latest_plan(db_session, family.id).plan_json["steps"]}
+    for step_id, step in after.items():
+        assert step["status"] == before[step_id]["status"], step_id
+        assert step["deadline"] == before[step_id]["deadline"], step_id
+        assert step["escalation_level"] == 0

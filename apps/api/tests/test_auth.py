@@ -39,3 +39,46 @@ def test_register_rejects_used_invite(client, db_session):
     assert client.post("/api/auth/register", json=body).status_code == 200
     resp = client.post("/api/auth/register", json=body)
     assert resp.status_code == 422
+
+
+def _signup(client, **overrides):
+    body = {"name": "Айгуль", "email": "new.parent@example.kz", "password": "secret123", "child_name": "Арман", "consent": True}
+    body.update(overrides)
+    return client.post("/api/auth/signup", json=body)
+
+
+def test_signup_creates_parent_family_and_session(client, db_session):
+    from app.models import Family, User
+    from tests.conftest import make_parent
+
+    busy = make_curator(db_session, email="busy@demo.kz")
+    free = make_curator(db_session, email="free@demo.kz")
+    from tests.conftest import make_family
+
+    make_family(db_session, busy, make_parent(db_session))
+
+    resp = _signup(client, email="New.Parent@Example.kz")
+    assert resp.status_code == 200, resp.text
+    me = client.get("/api/auth/me").json()
+    assert me["role"] == "parent" and me["email"] == "new.parent@example.kz"
+
+    family = db_session.query(Family).filter(Family.parent_id == me["id"]).one()
+    assert family.child_name == "Арман"
+    assert family.curator_id == free.id  # куратор с наименьшим числом семей
+
+    # Сразу можно начать интервью.
+    assert client.post("/api/interview/start").status_code == 200
+
+    client.post("/api/auth/logout")
+    assert login(client, "NEW.PARENT@example.kz").status_code == 200
+    assert db_session.query(User).filter(User.email == "new.parent@example.kz").count() == 1
+
+
+def test_signup_validation(client, db_session):
+    make_curator(db_session)
+    assert _signup(client, consent=False).status_code == 422
+    assert _signup(client, password="123").status_code == 422
+    assert _signup(client, child_name="  ").status_code == 422
+    assert _signup(client).status_code == 200
+    client.post("/api/auth/logout")
+    assert _signup(client).status_code == 409

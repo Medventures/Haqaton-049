@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Response
 from pydantic import BaseModel, EmailStr
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.auth import (
@@ -35,6 +36,17 @@ class RegisterRequest(BaseModel):
     name: str
     password: str
     consent: bool
+
+
+class SignupRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    child_name: str
+    consent: bool
+
+
+MIN_PASSWORD_LENGTH = 6
 
 
 class LoginRequest(BaseModel):
@@ -81,7 +93,7 @@ def invite(body: InviteRequest, response: Response, db: Session = Depends(get_db
         db.add(
             Outbox(
                 to_email=body.email,
-                subject="Приглашение в AqylRoute",
+                subject="Приглашение в ADM",
                 body=f"Регистрация: {settings.api_url}/ru/invite/{token}",
             )
         )
@@ -125,9 +137,44 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
     return {"id": user.id, "role": user.role, "name": user.name}
 
 
+@router.post("/signup")
+def signup(body: SignupRequest, response: Response, db: Session = Depends(get_db)):
+    """Самостоятельная регистрация родителя без приглашения. Семья сразу
+    закрепляется за куратором с наименьшим числом семей, чтобы черновик плана
+    после интервью было кому проверить."""
+    if not body.consent:
+        raise bad_request("Нужно согласие на обработку данных")
+    if len(body.password) < MIN_PASSWORD_LENGTH:
+        raise bad_request(f"Пароль должен быть не короче {MIN_PASSWORD_LENGTH} символов")
+    if not body.name.strip() or not body.child_name.strip():
+        raise bad_request("Укажите ваше имя и имя ребёнка")
+    email = body.email.lower()
+    if db.query(User).filter(func.lower(User.email) == email).first():
+        raise conflict("Этот email уже зарегистрирован")
+
+    curator = (
+        db.query(User)
+        .outerjoin(Family, Family.curator_id == User.id)
+        .filter(User.role == "curator")
+        .group_by(User.id)
+        .order_by(func.count(Family.id), User.id)
+        .first()
+    )
+
+    user = User(role="parent", name=body.name.strip(), email=email, password_hash=hash_password(body.password))
+    db.add(user)
+    db.flush()
+    db.add(Family(child_name=body.child_name.strip(), curator_id=curator.id if curator else None, parent_id=user.id))
+    db.commit()
+    db.refresh(user)
+
+    _set_session_cookie(response, create_session_token(user))
+    return {"id": user.id, "role": user.role, "name": user.name}
+
+
 @router.post("/login")
 def login(body: LoginRequest, response: Response, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == body.email).one_or_none()
+    user = db.query(User).filter(func.lower(User.email) == body.email.lower()).one_or_none()
     if user is None or not verify_password(body.password, user.password_hash):
         raise bad_request("Неверный email или пароль")
     token = create_session_token(user)

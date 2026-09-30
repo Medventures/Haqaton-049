@@ -7,7 +7,7 @@ import type { Step } from "@/lib/types";
 export function buildIcs(steps: Step[], locale: "ru" | "kk", origin: string): string {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const esc = (s: string) => s.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/[,;]/g, (m) => `\\${m}`);
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//AqylRoute//RU", "CALSCALE:GREGORIAN"];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ADM//RU", "CALSCALE:GREGORIAN"];
   for (const s of steps) {
     if (!s.deadline) continue;
     const day = s.deadline.replace(/-/g, "");
@@ -15,10 +15,10 @@ export function buildIcs(steps: Step[], locale: "ru" | "kk", origin: string): st
     const url = `${origin}/${locale}/plan/${s.step_id}`;
     lines.push(
       "BEGIN:VEVENT",
-      `UID:aqylroute-${s.step_id}-${day}@aqylroute`,
+      `UID:adm-${s.step_id}-${day}@adm`,
       `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${day}`,
-      `SUMMARY:${esc(`AqylRoute: ${title}`)}`,
+      `SUMMARY:${esc(`ADM: ${title}`)}`,
       `DESCRIPTION:${esc(`${s[`explanation_${locale}`] ?? ""}\n${url}`)}`,
       `URL:${url}`,
       "BEGIN:VALARM",

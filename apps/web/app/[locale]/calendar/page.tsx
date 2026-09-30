@@ -161,7 +161,7 @@ export default function CalendarPage() {
 
         {upcoming.length > 0 && (
           <button
-            onClick={() => downloadIcs(upcoming, locale, "aqylroute.ics")}
+            onClick={() => downloadIcs(upcoming, locale, "adm.ics")}
             className="tap-target w-full rounded-lg border border-border bg-card px-4 py-3 text-sm"
           >
             <span className="block font-medium">{t("addAll")}</span>

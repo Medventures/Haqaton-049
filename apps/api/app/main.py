@@ -47,7 +47,7 @@ def create_app() -> FastAPI:
     # позже при первом запросе.
     get_catalog()
 
-    app = FastAPI(title="AqylRoute API", lifespan=lifespan)
+    app = FastAPI(title="ADM API", lifespan=lifespan)
 
     app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)

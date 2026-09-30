@@ -6,6 +6,7 @@ import { DemoLogin } from "@/components/DemoLogin";
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations("landing");
+  const tAuth = await getTranslations("auth");
   const how = t.raw("how") as { t: string; d: string }[];
   const icons = [MedicineIcon, EducationIcon, SocialIcon];
   const colors = ["text-medicine", "text-education", "text-social"];
@@ -32,6 +33,10 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
             {t("ctaCurator")}
           </Link>
         </div>
+
+        <Link href={`/${locale}/register`} className="tap-target inline-flex items-center mt-3 text-sm text-medicine underline">
+          {tAuth("createAccount")}
+        </Link>
 
         <div className="w-full max-w-sm mt-6">
           <DemoLogin />

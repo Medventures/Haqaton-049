@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "AqylRoute",
-    short_name: "AqylRoute",
+    name: "ADM",
+    short_name: "ADM",
     description: "Единый маршрут ребёнка между медициной, образованием и соцзащитой",
     start_url: "/?source=pwa",
     scope: "/",

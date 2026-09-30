@@ -13,7 +13,7 @@ const plexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "AqylRoute",
+  title: "ADM",
   icons: { apple: "/icons/apple-touch-icon.png" },
 };
 

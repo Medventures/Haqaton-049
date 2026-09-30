@@ -185,7 +185,7 @@ export default function StepPage() {
         )}
         {step.deadline && (
           <button
-            onClick={() => downloadIcs([step], locale, `aqylroute-${step.step_id}.ics`)}
+            onClick={() => downloadIcs([step], locale, `adm-${step.step_id}.ics`)}
             className="tap-target w-full rounded-lg border border-border bg-card py-3 text-sm"
           >
             {tH("addToCalendar")}

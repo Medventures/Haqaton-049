@@ -35,7 +35,7 @@ export default function LoginPage() {
     <main className="min-h-dvh flex flex-col items-center justify-center gap-4 px-4 py-8">
       <form onSubmit={onSubmit} className="w-full max-w-sm flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
         <Link href={`/${locale}`} className="font-semibold tracking-tight text-muted text-sm">
-          AqylRoute
+          ADM
         </Link>
         <h1 className="text-2xl font-semibold mb-2">{t("loginTitle")}</h1>
         <label className="flex flex-col gap-1">
@@ -66,6 +66,13 @@ export default function LoginPage() {
         >
           {t("loginButton")}
         </button>
+        <div className="rounded-xl border border-border bg-background px-4 py-3 text-sm text-center">
+          <span className="text-muted">{t("noAccount")}</span>{" "}
+          <Link href={`/${locale}/register`} className="font-medium text-medicine underline">
+            {t("createAccount")}
+          </Link>
+          {role === "curator" && <p className="text-xs text-muted mt-1">{t("curatorNote")}</p>}
+        </div>
       </form>
       <DemoLogin role={role} />
     </main>

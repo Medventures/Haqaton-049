@@ -78,7 +78,7 @@ export function AppHeader() {
             <circle cx="19" cy="17" r="3" className="fill-social" />
             <path d="M5 17 12 7l7 10" fill="none" stroke="currentColor" strokeWidth="1.5" opacity=".5" />
           </svg>
-          AqylRoute
+          ADM
         </Link>
 
         <Link

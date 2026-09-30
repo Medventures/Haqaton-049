@@ -1,3 +1,4 @@
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -10,6 +11,15 @@ const plexSans = IBM_Plex_Sans({
   weight: ["400", "500", "600"],
   variable: "--font-plex",
 });
+
+export const metadata: Metadata = {
+  title: "AqylRoute",
+  icons: { apple: "/icons/apple-touch-icon.png" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0b0d10",
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

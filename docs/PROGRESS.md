@@ -139,5 +139,27 @@ cd apps/web && API_URL=http://localhost:8000 npm run dev
 - `PATCH /documents/{id}` (подтверждение полей, отметка «проверено») есть в API, но не подключён в UI документов (только загрузка и список).
 - Установка PWA, офлайн, `manifest.ts`, `sw.ts` — предмет этапа 4, ниже.
 
-## Этап 4. PWA — не начат
+## Этап 4. PWA — готово
+
+Что сделано:
+
+- `app/manifest.ts` — имя/описание на ru, `start_url=/?source=pwa`, `display=standalone`, тёмные `background_color`/`theme_color`, иконки 192/512/512-maskable/apple-touch-icon-180, `shortcuts` (План, Документы).
+- Иконки сгенерированы скриптом `apps/api/scripts/generate_icons.py` (Pillow, без SVG-библиотек) — геометрический логотип (три узла маршрута + линия) в стиле проекта.
+- `app/sw.ts` + `@serwist/next`: precache сборки + `/offline`, `CacheFirst` для статики (через `defaultCache` пресета Serwist для Next.js), `NetworkFirst` (7 дней, кеш `api-private`) для `GET /api/plans/*`, `/api/documents`, `/api/notifications`, `NetworkOnly` для остальных `/api/*` (включая все `POST/PATCH/DELETE` и `/api/reports/*`). PDF-эндпоинты дополнительно отдают `Cache-Control: no-store` (раздел 16.5).
+- `components/AppChrome.tsx`: регистрация SW, кнопка «Установить» по `beforeinstallprompt` (скрыта на экране интервью), инструкция для iOS, баннер «Доступно обновление» (`skipWaiting` + reload), баннер офлайн, выход с `postMessage` в SW на очистку кеша `api-private`.
+- `/[locale]/offline` — офлайн-страница (fallback для навигации).
+- Интервью без сети не запускает `POST /interview/start`, показывает `common.needsInternet` вместо запроса.
+- **Важно**: `@serwist/next` не поддерживает Turbopack (раздел 16.2 требует реальный service worker) — `npm run build` использует `next build --webpack` (см. `package.json`); `npm run dev` остаётся на Turbopack для скорости, но тогда `sw.js` не генерируется — PWA-проверки делать через `npm run build && npm run start`.
+
+Как проверить руками:
+
+```bash
+cd apps/api && .venv/bin/python -m uvicorn app.main:app &
+cd apps/web && API_URL=http://localhost:8000 npm run build && npm run start
+```
+Открыть `http://localhost:3000/ru`, DevTools → Application: манифест без ошибок, SW активен, `manifest.webmanifest`/`sw.js`/иконки отдаются 200 (проверено live curl'ом на `next start` в этой сессии).
+
+Проверки раздела 16.6, не выполненные вручную в этом окружении (нет браузера/DevTools в песочнице): визуальная установка на Android/десктоп/iOS, реальное отключение сети в браузере с проверкой баннера на `/plan`, визуальная проверка Cache Storage после выхода. Логика этих трёх пунктов реализована (offline-баннер, `LOGOUT_CLEAR_PRIVATE_CACHE`, `NetworkFirst` fallback на `/offline`), но не подтверждена визуально — честно, а не тихо пропущено.
+
+## Этап 5. Демо и деплой — не начат
 ## Этап 5. Демо и деплой — не начат

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { AppChrome } from "@/components/AppChrome";
 
 type Option = { code: string; label_ru: string; label_kk: string };
 type Question = {
@@ -23,6 +24,7 @@ type InterviewState = { done: boolean; question?: Question };
 
 export default function InterviewPage() {
   const t = useTranslations("interview");
+  const tCommon = useTranslations("common");
   const locale = useLocale() as "ru" | "kk";
   const router = useRouter();
   const [state, setState] = useState<InterviewState | null>(null);
@@ -32,6 +34,10 @@ export default function InterviewPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!navigator.onLine) {
+      setError(tCommon("needsInternet"));
+      return;
+    }
     api
       .post<InterviewState>("/interview/start")
       .then((s) => {
@@ -39,6 +45,7 @@ export default function InterviewPage() {
         setValue(undefined);
       })
       .catch((e) => setError(String(e)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function submit() {
@@ -85,7 +92,9 @@ export default function InterviewPage() {
   const canSubmit = value !== undefined && value !== "" && !(Array.isArray(value) && value.length === 0);
 
   return (
-    <main className="min-h-dvh flex flex-col px-6 py-10 max-w-xl mx-auto w-full">
+    <main className="min-h-dvh flex flex-col max-w-xl mx-auto w-full">
+      <AppChrome hideInstall />
+      <div className="flex-1 flex flex-col px-6 py-10">
       <p className="text-sm text-muted mb-2">{t("progress", { current: answered + 1, min: 8, max: 12 })}</p>
       <h1 className="text-2xl font-medium mb-3">{q[`text_${locale}`]}</h1>
       <p className="text-sm text-muted mb-6">
@@ -99,7 +108,7 @@ export default function InterviewPage() {
       <div className="mt-8 flex gap-3">
         {answered > 0 && (
           <button onClick={back} disabled={busy} className="tap-target px-4 py-2 rounded-lg border border-border">
-            {t("back") === t("back") ? "←" : "←"}
+            ←
           </button>
         )}
         <button
@@ -109,6 +118,7 @@ export default function InterviewPage() {
         >
           {t("submit")}
         </button>
+      </div>
       </div>
     </main>
   );

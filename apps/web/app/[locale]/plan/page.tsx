@@ -7,6 +7,7 @@ import { api, ApiError } from "@/lib/api";
 import type { PlanJson } from "@/lib/types";
 import { AGENCY_ICON } from "@/components/icons";
 import { StatusBadge } from "@/components/StatusBadge";
+import { AppChrome } from "@/components/AppChrome";
 
 export default function PlanPage() {
   const t = useTranslations("plan");
@@ -44,8 +45,10 @@ export default function PlanPage() {
   for (const s of plan.steps) byAgency[s.agency]?.push(s);
 
   return (
-    <main className="min-h-dvh px-6 py-10 max-w-2xl mx-auto w-full">
-      <div className="flex justify-between items-center mb-6">
+    <main className="min-h-dvh max-w-2xl mx-auto w-full">
+      <AppChrome />
+      <div className="px-6 pb-10">
+      <div className="flex justify-between items-center mb-6 pt-4">
         <h1 className="text-2xl font-medium">AqylRoute</h1>
         <a href={`/api/reports/route/${family.id}.pdf?lang=${locale}`} className="text-sm underline">
           скачать PDF
@@ -83,6 +86,7 @@ export default function PlanPage() {
           );
         })}
       </section>
+      </div>
     </main>
   );
 }
@@ -110,10 +114,13 @@ function StepRow({ step, familyId, locale }: { step: PlanJson["steps"][number]; 
 function WaitingScreen() {
   const t = useTranslations("interview");
   return (
-    <Centered>
-      <h1 className="text-2xl font-medium mb-2">{t("waitingTitle")}</h1>
-      <p className="text-muted">{t("waitingBody")}</p>
-    </Centered>
+    <>
+      <AppChrome />
+      <Centered>
+        <h1 className="text-2xl font-medium mb-2">{t("waitingTitle")}</h1>
+        <p className="text-muted">{t("waitingBody")}</p>
+      </Centered>
+    </>
   );
 }
 

@@ -20,3 +20,7 @@ apps/api/uploads
 apps/web/.next
 apps/web/next-env.d.ts
 apps/web/*.tsbuildinfo
+# сгенерировано Serwist из app/sw.ts при `npm run build` (раздел 16.2)
+apps/web/public/sw.js
+apps/web/public/sw.js.map
+apps/web/public/swe-worker-*.js

@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { AppChrome } from "@/components/AppChrome";
 
 type FamilyRow = { id: number; child_name: string; region: string | null; plan_status: string | null; plan_version: number | null };
 
@@ -38,7 +39,9 @@ export default function CuratorFamiliesPage() {
   });
 
   return (
-    <main className="min-h-dvh px-6 py-10 max-w-3xl mx-auto w-full">
+    <main className="min-h-dvh max-w-3xl mx-auto w-full">
+      <AppChrome />
+      <div className="px-6 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-medium">{t("families")}</h1>
         <button onClick={() => setInviting((v) => !v)} className="tap-target px-4 py-2 rounded-lg border border-border text-sm">
@@ -87,6 +90,7 @@ export default function CuratorFamiliesPage() {
       <Link href={`/${locale}/curator/overdue`} className="inline-block mt-6 text-sm underline">
         {t("overdueScreen")}
       </Link>
+      </div>
     </main>
   );
 }

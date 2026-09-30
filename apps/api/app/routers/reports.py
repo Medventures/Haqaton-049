@@ -32,7 +32,8 @@ def report_route(
     if plan is None or (user.role == "parent" and plan.status == "draft"):
         raise not_found("План не найден")
     html = render_route_html(plan.plan_json, get_catalog(), lang)
-    return Response(content=html_to_pdf(html), media_type="application/pdf")
+    # Раздел 16.5: файлы документов и PDF — Cache-Control: no-store.
+    return Response(content=html_to_pdf(html), media_type="application/pdf", headers={"Cache-Control": "no-store"})
 
 
 @router.get("/visit/{family_id}.pdf")
@@ -51,7 +52,8 @@ def report_visit(
     if step_obj is None:
         raise bad_request(f"Шаг {step} не найден")
     html = render_visit_html(step_obj, get_catalog(), lang)
-    return Response(content=html_to_pdf(html), media_type="application/pdf")
+    # Раздел 16.5: файлы документов и PDF — Cache-Control: no-store.
+    return Response(content=html_to_pdf(html), media_type="application/pdf", headers={"Cache-Control": "no-store"})
 
 
 @router.get("/summary/{family_id}.pdf")
@@ -78,4 +80,5 @@ def report_summary(
         for d in db.query(Document).filter(Document.family_id == family.id).all()
     ]
     html = render_summary_html(family.child_name, plan.plan_json, versions, escalations, documents, lang)
-    return Response(content=html_to_pdf(html), media_type="application/pdf")
+    # Раздел 16.5: файлы документов и PDF — Cache-Control: no-store.
+    return Response(content=html_to_pdf(html), media_type="application/pdf", headers={"Cache-Control": "no-store"})

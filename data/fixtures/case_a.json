@@ -1,0 +1,80 @@
+{
+  "case_id": "A",
+  "description": "Мальчик 2 года, первичный маршрут (раздел 19.1)",
+  "computed_at": "2026-10-01",
+  "answers": {
+    "Q01": 2,
+    "Q02": "no",
+    "Q03": "home",
+    "Q04": "karaganda_city",
+    "Q05": "no",
+    "Q08": "yes",
+    "Q09": "yes",
+    "Q13": ["none"],
+    "Q14": ["birth_cert"],
+    "Q16": ["regression"],
+    "Q17": "почти не говорит, не отзывается на имя",
+    "Q18": "where_to_go"
+  },
+  "profile_expected": {
+    "child": { "age": 2, "doctor_conclusion": "no", "day_place": "home" },
+    "family": { "region": "karaganda_city" },
+    "pmpk": { "status": "no", "recommendations": null, "valid_until": null },
+    "education": { "change_planned": "yes", "home_learning_need": "yes" },
+    "disability": { "status": null, "review_date": null },
+    "social": { "benefits": null },
+    "support": { "current": ["none"] },
+    "docs": { "present": ["birth_cert"], "birth_abroad": null },
+    "red_flags": ["regression"],
+    "concerns": "почти не говорит, не отзывается на имя",
+    "priority_focus": "where_to_go",
+    "unknown_fields": []
+  },
+  "expected_steps": [
+    {
+      "step_id": "S1",
+      "service_id": "MED_URGENT",
+      "rule_id": "R01",
+      "priority": "critical",
+      "deadline": "2026-10-04",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S2",
+      "service_id": "EDU_EARLY_HELP",
+      "rule_id": "R03",
+      "priority": "high",
+      "deadline": "2026-10-31",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S3",
+      "service_id": "MED_DEV_CONSULT",
+      "rule_id": "R02",
+      "priority": "high",
+      "deadline": "2026-10-31",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S4",
+      "service_id": "EDU_PMPK",
+      "rule_id": "R04",
+      "priority": "high",
+      "deadline": "2026-11-02",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S5",
+      "service_id": "EDU_ENROLL",
+      "rule_id": "R10",
+      "priority": "high",
+      "deadline": "2026-12-02",
+      "status": "blocked",
+      "depends_on": ["S4"]
+    }
+  ]
+}

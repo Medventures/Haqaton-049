@@ -1,0 +1,87 @@
+{
+  "case_id": "B",
+  "description": "Девочка 8 лет, продление поддержки в школе (раздел 19.2)",
+  "computed_at": "2026-10-01",
+  "answers": {
+    "Q01": 8,
+    "Q02": "yes",
+    "Q03": "school",
+    "Q04": "karaganda_city",
+    "Q05": "expiring",
+    "Q06": ["assistant"],
+    "Q07": "2026-12-01",
+    "Q10": "yes_with_ipr",
+    "Q12": ["none"],
+    "Q13": ["rehab"],
+    "Q14": ["birth_cert", "pmpk_conclusion", "disability_conclusion"],
+    "Q16": ["none"]
+  },
+  "fallback_answers_for_interview_integration_test": {
+    "Q08": "no",
+    "Q09": "yes",
+    "Q11": "unknown"
+  },
+  "profile_expected": {
+    "child": { "age": 8, "doctor_conclusion": "yes", "day_place": "school" },
+    "family": { "region": "karaganda_city" },
+    "pmpk": {
+      "status": "expiring",
+      "recommendations": ["assistant"],
+      "valid_until": "2026-12-01"
+    },
+    "education": { "change_planned": null, "home_learning_need": null },
+    "disability": { "status": "yes_with_ipr", "review_date": null },
+    "social": { "benefits": ["none"] },
+    "support": { "current": ["rehab"] },
+    "docs": {
+      "present": ["birth_cert", "pmpk_conclusion", "disability_conclusion"],
+      "birth_abroad": null
+    },
+    "red_flags": ["none"],
+    "concerns": null,
+    "priority_focus": null,
+    "unknown_fields": [
+      "education.change_planned",
+      "education.home_learning_need",
+      "disability.review_date"
+    ]
+  },
+  "expected_steps": [
+    {
+      "step_id": "S1",
+      "service_id": "EDU_PMPK_RENEW",
+      "rule_id": "R05",
+      "priority": "critical",
+      "deadline": "2026-11-02",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S2",
+      "service_id": "EDU_ASSISTANT",
+      "rule_id": "R07",
+      "priority": "high",
+      "deadline": "2026-12-02",
+      "status": "blocked",
+      "depends_on": ["S1"]
+    },
+    {
+      "step_id": "S3",
+      "service_id": "EDU_CHARACTERISTIC",
+      "rule_id": "R06",
+      "priority": "medium",
+      "deadline": "2026-10-15",
+      "status": "not_started",
+      "depends_on": []
+    },
+    {
+      "step_id": "S4",
+      "service_id": "SOC_BENEFITS",
+      "rule_id": "R13",
+      "priority": "medium",
+      "deadline": "2026-10-31",
+      "status": "not_started",
+      "depends_on": []
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Зависимости для проверок этапа 0 (docs/SPEC.md, раздел 3).
-# Полный requirements.txt (FastAPI, SQLAlchemy, Alembic и т.д.) появится на этапе 1.
+# Дополнительно к requirements.txt — только для тестов и разработки.
+-r requirements.txt
 pytest==9.1.1
-jsonschema==4.26.0
+httpx==0.28.1

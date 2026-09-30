@@ -1,0 +1,122 @@
+{
+  "common": {
+    "appName": "AqylRoute",
+    "loading": "Загрузка…",
+    "error": "Что-то пошло не так",
+    "back": "Назад",
+    "next": "Далее",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "download": "Скачать PDF",
+    "logout": "Выйти",
+    "offline": "Нет сети. Показаны данные от {date}",
+    "needsInternet": "Нужен интернет"
+  },
+  "landing": {
+    "title": "Единый маршрут ребёнка между медициной, образованием и соцзащитой",
+    "subtitle": "AqylRoute помогает не потеряться между ведомствами: интервью, персональный план и куратор, который его проверяет.",
+    "ctaParent": "Я родитель",
+    "ctaCurator": "Я специалист",
+    "ctaDemo": "Посмотреть демо",
+    "login": "Войти"
+  },
+  "auth": {
+    "loginTitle": "Вход",
+    "email": "Email",
+    "password": "Пароль",
+    "loginButton": "Войти",
+    "registerTitle": "Регистрация",
+    "name": "Ваше имя",
+    "consent": "Согласен(на) на обработку данных",
+    "registerButton": "Зарегистрироваться",
+    "invalidCredentials": "Неверный email или пароль"
+  },
+  "interview": {
+    "progress": "Вопрос {current} из {min}–{max}",
+    "why": "Зачем мы спрашиваем",
+    "submit": "Ответить",
+    "waitingTitle": "План проверяет специалист",
+    "waitingBody": "Куратор изучит ответы и подтвердит маршрут. Мы пришлём уведомление.",
+    "finishTitle": "Интервью завершено",
+    "finishBody": "Спасибо! Переходим к плану."
+  },
+  "plan": {
+    "thisWeek": "На этой неделе",
+    "route": "Маршрут",
+    "overdueLabel": "Просрочено",
+    "wasLabel": "было",
+    "nowLabel": "стало",
+    "openStep": "Открыть шаг",
+    "empty": "Шагов пока нет"
+  },
+  "step": {
+    "explanation": "Объяснение",
+    "responsible": "Ответственный",
+    "deadline": "Срок",
+    "documents": "Документы",
+    "dependsOn": "Зависит от",
+    "provider": "Поставщик",
+    "basedOn": "На основании",
+    "markDone": "Я сделал",
+    "docHave": "Есть",
+    "docNeed": "Нужно",
+    "docIfPresent": "При наличии",
+    "docOnRequest": "Может запросить ведомство",
+    "docAgencyRequests": "Запрашивает ведомство само"
+  },
+  "documents": {
+    "title": "Документы",
+    "missing": "Не хватает",
+    "list": "Все документы",
+    "upload": "Загрузить",
+    "confirm": "Подтвердить"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "empty": "Пока пусто",
+    "markRead": "Отметить прочитанным"
+  },
+  "curator": {
+    "families": "Мои семьи",
+    "invite": "Пригласить семью",
+    "child": "Ребёнок",
+    "age": "Возраст",
+    "stage": "Этап",
+    "overdue": "Просрочки",
+    "redFlags": "Красные флаги",
+    "planWaiting": "План ждёт подтверждения",
+    "approve": "Подтвердить план",
+    "addStep": "Добавить из справочника",
+    "removeStep": "Убрать",
+    "changeDeadline": "Изменить срок",
+    "changeResponsible": "Сменить ответственного",
+    "overdueScreen": "Просрочки",
+    "contactedFamily": "Связался с семьёй",
+    "postponeDeadline": "Перенести срок",
+    "copyAppeal": "Скопировать обращение",
+    "history": "История",
+    "versions": "Версии"
+  },
+  "status": {
+    "not_started": "Не начато",
+    "blocked": "Заблокировано",
+    "in_progress": "В процессе",
+    "done_by_parent": "Отмечено родителем",
+    "done": "Готово",
+    "overdue": "Просрочено",
+    "draft": "Черновик",
+    "approved": "Подтверждён",
+    "archived": "В архиве"
+  },
+  "agency": {
+    "medicine": "Медицина",
+    "education": "Образование",
+    "social": "Соцзащита"
+  },
+  "priority": {
+    "critical": "Критично",
+    "high": "Важно",
+    "medium": "Средне",
+    "low": "Не срочно"
+  }
+}

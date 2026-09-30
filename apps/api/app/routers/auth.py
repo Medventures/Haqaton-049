@@ -94,7 +94,13 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
     invite_row = db.get(Invite, body.token)
     if invite_row is None or invite_row.used_at is not None:
         raise bad_request("Приглашение недействительно")
-    if invite_row.expires_at < datetime.now(timezone.utc):
+    # SQLite не хранит tzinfo: DateTime(timezone=True) возвращается naive
+    # после round-trip через БД, хотя писали aware. Приводим обе стороны
+    # к aware UTC перед сравнением (см. docs/DECISIONS.md).
+    expires_at = invite_row.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at < datetime.now(timezone.utc):
         raise bad_request("Срок приглашения истёк")
     if not body.consent:
         raise bad_request("Нужно согласие на обработку данных")

@@ -8,7 +8,7 @@ from app.config import get_settings
 from app.db import SessionLocal
 from app.errors import http_exception_handler, validation_exception_handler
 from app.modules.engine.catalog import get_catalog
-from app.routers import auth, catalog, demo, documents, families, interview, notifications, plans, reports
+from app.routers import auth, catalog, demo, documents, families, interview, notifications, overdue, plans, reports
 
 
 def _run_scheduler_tick():
@@ -52,7 +52,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
-    for router in (auth, interview, plans, catalog, families, documents, reports, notifications, demo):
+    for router in (auth, interview, plans, catalog, families, documents, reports, notifications, demo, overdue):
         app.include_router(router.router, prefix="/api")
 
     @app.get("/api/health")

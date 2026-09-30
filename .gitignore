@@ -15,3 +15,8 @@ apps/api/.pytest_cache
 apps/api/aqylroute.db
 *.pyc
 apps/api/uploads
+
+# Next.js (apps/web)
+apps/web/.next
+apps/web/next-env.d.ts
+apps/web/*.tsbuildinfo

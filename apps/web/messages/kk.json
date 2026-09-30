@@ -1,0 +1,122 @@
+{
+  "common": {
+    "appName": "AqylRoute",
+    "loading": "Жүктелуде…",
+    "error": "Бірдеңе дұрыс болмады",
+    "back": "Артқа",
+    "next": "Келесі",
+    "save": "Сақтау",
+    "cancel": "Бас тарту",
+    "download": "PDF жүктеу",
+    "logout": "Шығу",
+    "offline": "Желі жоқ. {date} мәліметтері көрсетілген",
+    "needsInternet": "Интернет қажет"
+  },
+  "landing": {
+    "title": "Бала үшін медицина, білім және әлеуметтік қорғау арасындағы бірыңғай маршрут",
+    "subtitle": "AqylRoute ведомстволар арасында адаспауға көмектеседі: сұхбат, жеке жоспар және оны тексеретін куратор.",
+    "ctaParent": "Мен ата-анамын",
+    "ctaCurator": "Мен маманмын",
+    "ctaDemo": "Демоны көру",
+    "login": "Кіру"
+  },
+  "auth": {
+    "loginTitle": "Кіру",
+    "email": "Email",
+    "password": "Құпия сөз",
+    "loginButton": "Кіру",
+    "registerTitle": "Тіркелу",
+    "name": "Атыңыз",
+    "consent": "Деректерді өңдеуге келісемін",
+    "registerButton": "Тіркелу",
+    "invalidCredentials": "Email немесе құпия сөз қате"
+  },
+  "interview": {
+    "progress": "{current} / {min}–{max} сұрақ",
+    "why": "Неге сұраймыз",
+    "submit": "Жауап беру",
+    "waitingTitle": "Жоспарды маман тексеруде",
+    "waitingBody": "Куратор жауаптарды қарап, маршрутты бекітеді. Хабарландыру жібереміз.",
+    "finishTitle": "Сұхбат аяқталды",
+    "finishBody": "Рақмет! Жоспарға өтеміз."
+  },
+  "plan": {
+    "thisWeek": "Осы аптада",
+    "route": "Маршрут",
+    "overdueLabel": "Мерзімі өтті",
+    "wasLabel": "болды",
+    "nowLabel": "болды",
+    "openStep": "Қадамды ашу",
+    "empty": "Әзірге қадамдар жоқ"
+  },
+  "step": {
+    "explanation": "Түсіндірме",
+    "responsible": "Жауапты",
+    "deadline": "Мерзім",
+    "documents": "Құжаттар",
+    "dependsOn": "Байланысты",
+    "provider": "Қызмет көрсетуші",
+    "basedOn": "Негіз",
+    "markDone": "Мен істедім",
+    "docHave": "Бар",
+    "docNeed": "Керек",
+    "docIfPresent": "Болса",
+    "docOnRequest": "Ведомство сұрата алады",
+    "docAgencyRequests": "Ведомство өзі сұратады"
+  },
+  "documents": {
+    "title": "Құжаттар",
+    "missing": "Жетіспейді",
+    "list": "Барлық құжаттар",
+    "upload": "Жүктеу",
+    "confirm": "Растау"
+  },
+  "notifications": {
+    "title": "Хабарландырулар",
+    "empty": "Әзірге бос",
+    "markRead": "Оқылды деп белгілеу"
+  },
+  "curator": {
+    "families": "Менің отбасыларым",
+    "invite": "Отбасын шақыру",
+    "child": "Бала",
+    "age": "Жасы",
+    "stage": "Кезең",
+    "overdue": "Мерзімі өткендер",
+    "redFlags": "Қызыл белгілер",
+    "planWaiting": "Жоспар бекітуді күтуде",
+    "approve": "Жоспарды бекіту",
+    "addStep": "Анықтамалықтан қосу",
+    "removeStep": "Алып тастау",
+    "changeDeadline": "Мерзімді өзгерту",
+    "changeResponsible": "Жауаптыны ауыстыру",
+    "overdueScreen": "Мерзімі өткендер",
+    "contactedFamily": "Отбасымен байланыстым",
+    "postponeDeadline": "Мерзімді ауыстыру",
+    "copyAppeal": "Өтінішті көшіру",
+    "history": "Тарих",
+    "versions": "Нұсқалар"
+  },
+  "status": {
+    "not_started": "Басталмаған",
+    "blocked": "Бұғатталған",
+    "in_progress": "Орындалуда",
+    "done_by_parent": "Ата-ана белгіледі",
+    "done": "Дайын",
+    "overdue": "Мерзімі өтті",
+    "draft": "Жоба",
+    "approved": "Бекітілді",
+    "archived": "Мұрағатта"
+  },
+  "agency": {
+    "medicine": "Медицина",
+    "education": "Білім беру",
+    "social": "Әлеуметтік қорғау"
+  },
+  "priority": {
+    "critical": "Өте маңызды",
+    "high": "Маңызды",
+    "medium": "Орташа",
+    "low": "Асығыс емес"
+  }
+}

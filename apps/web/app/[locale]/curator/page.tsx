@@ -5,6 +5,8 @@ import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { AppChrome } from "@/components/AppChrome";
+import { CuratorTabs } from "@/components/CuratorTabs";
+import { StatusBadge } from "@/components/StatusBadge";
 
 type FamilyRow = { id: number; child_name: string; region: string | null; plan_status: string | null; plan_version: number | null };
 
@@ -41,9 +43,10 @@ export default function CuratorFamiliesPage() {
   return (
     <main className="min-h-dvh max-w-3xl mx-auto w-full">
       <AppChrome />
-      <div className="px-6 py-10">
+      <div className="px-4 sm:px-6 py-6">
+      <CuratorTabs current="families" />
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-medium">{t("families")}</h1>
+        <h1 className="text-2xl font-semibold">{t("families")}</h1>
         <button onClick={() => setInviting((v) => !v)} className="tap-target px-4 py-2 rounded-lg border border-border text-sm">
           {t("invite")}
         </button>
@@ -77,19 +80,27 @@ export default function CuratorFamiliesPage() {
           <Link
             key={r.id}
             href={`/${locale}/curator/f/${r.id}`}
-            className="tap-target flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
+            className={`tap-target flex items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 hover:border-medicine/60 ${
+              r.plan_status === "draft" ? "border-social/60" : "border-border"
+            }`}
           >
-            <span>{r.child_name}</span>
-            <span className="text-sm text-muted">
-              {r.plan_status === "draft" ? t("planWaiting") : r.plan_status ?? "—"}
+            <span className="flex items-center gap-3 min-w-0">
+              <span className="flex items-center justify-center w-9 h-9 rounded-full bg-education/15 text-education text-sm font-semibold shrink-0" aria-hidden>
+                {r.child_name.slice(0, 1)}
+              </span>
+              <span className="font-medium truncate">{r.child_name}</span>
             </span>
+            {r.plan_status === "draft" ? (
+              <span className="text-sm text-social shrink-0">{t("planWaiting")}</span>
+            ) : r.plan_status ? (
+              <StatusBadge status={r.plan_status} />
+            ) : (
+              <span className="text-sm text-muted shrink-0">{t("noPlan")}</span>
+            )}
           </Link>
         ))}
       </div>
 
-      <Link href={`/${locale}/curator/overdue`} className="inline-block mt-6 text-sm underline">
-        {t("overdueScreen")}
-      </Link>
       </div>
     </main>
   );

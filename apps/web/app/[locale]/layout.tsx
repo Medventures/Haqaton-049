@@ -38,7 +38,15 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} className={plexSans.variable}>
+    <html lang={locale} className={plexSans.variable} suppressHydrationWarning>
+      <head>
+        {/* Раздел 15.3: выбранная тема запоминается и применяется до отрисовки. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-dvh bg-background text-foreground antialiased">
         <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
       </body>

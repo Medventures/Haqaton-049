@@ -11,7 +11,7 @@
   --color-social: #ffb35c;
   --color-critical: #ff6b6b;
   --color-danger: #ff6b6b;
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex), "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root[data-theme="light"] {
@@ -20,6 +20,11 @@
   --color-muted: #565f6d;
   --color-border: #dfe3ea;
   --color-card: #ffffff;
+  --color-medicine: #1f7fd1;
+  --color-education: #2f9446;
+  --color-social: #c46a00;
+  --color-critical: #d63b3b;
+  --color-danger: #d63b3b;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -38,4 +43,14 @@ body {
 .tap-target {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Раздел 15.3: спокойные переходы не дольше 200 мс. */
+a, button {
+  transition: background-color 150ms, border-color 150ms, opacity 150ms;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-medicine);
+  outline-offset: 2px;
 }

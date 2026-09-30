@@ -8,6 +8,8 @@ import { api } from "@/lib/api";
 import type { PlanJson } from "@/lib/types";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ArrowLink } from "@/components/ParentNav";
+import { DownloadButton } from "@/components/FileButton";
+import { AppChrome } from "@/components/AppChrome";
 import { daysBetween, formatDate, useParentData } from "@/lib/parent";
 import { downloadIcs } from "@/lib/ics";
 
@@ -24,6 +26,7 @@ export default function StepPage() {
   const tN = useTranslations("nav");
   const tR = useTranslations("reminders");
   const tResp = useTranslations("responsible");
+  const tPdf = useTranslations("pdf");
   const locale = useLocale() as "ru" | "kk";
   const { step: stepId, locale: localeParam } = useParams<{ step: string; locale: string }>();
   const { familyId, plan, setPlan, reference } = useParentData();
@@ -55,7 +58,9 @@ export default function StepPage() {
   const docTitle = (docType: string) => reference.document_types[docType]?.[`title_${locale}`] ?? docType;
 
   return (
-    <main className="min-h-dvh max-w-xl mx-auto w-full px-4 sm:px-6 pt-6">
+    <main className="min-h-dvh">
+      <AppChrome />
+      <div className="max-w-xl mx-auto w-full px-4 sm:px-6 pt-4">
       <Link href={`/${locale}/plan`} className="tap-target inline-flex items-center gap-1 text-sm text-muted mb-4 min-h-11">
         ← {tN("toPlan")}
       </Link>
@@ -187,15 +192,14 @@ export default function StepPage() {
           </button>
         )}
         {familyId && (
-          <a
+          <DownloadButton
             href={`/api/reports/visit/${familyId}.pdf?lang=${localeParam}&step=${step.step_id}`}
-            className="tap-target block text-center text-sm underline py-2"
-          >
-            PDF
-          </a>
+            title={tPdf("visit")}
+          />
         )}
       </div>
 
+      </div>
       <div aria-hidden className="h-24" />
       <nav
         aria-label={tN("label")}

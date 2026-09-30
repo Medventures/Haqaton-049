@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { AppChrome } from "@/components/AppChrome";
 import { ParentNav } from "@/components/ParentNav";
-import { daysBetween, formatDate, isOpen, useParentData } from "@/lib/parent";
+import { daysBetween, formatDate, formatDateTime, isOpen, useParentData } from "@/lib/parent";
 import type { Step } from "@/lib/types";
 
 type Notif = { id: number; type: string; payload: Record<string, unknown>; created_at: string; read_at: string | null };
@@ -50,7 +50,7 @@ export default function NotificationsPage() {
     <main className="min-h-dvh max-w-2xl mx-auto w-full">
       {plan && <AppChrome />}
       <div className="px-4 sm:px-6 pb-6">
-        <h1 className="text-2xl font-medium pt-4 mb-6">{t("title")}</h1>
+        <h1 className="text-2xl font-semibold pt-6 mb-6">{t("title")}</h1>
 
         {plan && today && (
           <>
@@ -89,7 +89,7 @@ export default function NotificationsPage() {
                   {typeLabel(n.type)}
                 </p>
                 {step && <p className="mt-0.5">{step[`title_${locale}`]}</p>}
-                <p className="text-muted text-xs mt-1">{new Date(n.created_at).toLocaleString(locale === "kk" ? "kk-KZ" : "ru-RU")}</p>
+                <p className="text-muted text-xs mt-1">{formatDateTime(n.created_at, locale)}</p>
               </>
             );
             const cls = `block rounded-lg border border-border px-4 py-3 text-sm ${n.read_at ? "opacity-60" : "bg-card"}`;

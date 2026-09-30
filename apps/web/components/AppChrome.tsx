@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { AppHeader } from "@/components/AppHeader";
+import { formatDateTime } from "@/lib/parent";
 
 /**
  * Раздел 16.4-16.5: регистрация service worker, своя кнопка установки
@@ -12,7 +12,6 @@ import { api } from "@/lib/api";
  */
 export function AppChrome({ hideInstall = false }: { hideInstall?: boolean }) {
   const t = useTranslations("common");
-  const router = useRouter();
   const locale = useLocale();
   const [online, setOnline] = useState(true);
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
@@ -57,12 +56,6 @@ export function AppChrome({ hideInstall = false }: { hideInstall?: boolean }) {
     };
   }, []);
 
-  async function logout() {
-    navigator.serviceWorker?.controller?.postMessage("LOGOUT_CLEAR_PRIVATE_CACHE");
-    await api.post("/auth/logout");
-    router.push(`/${locale}`);
-  }
-
   async function install() {
     if (!installPrompt) return;
     // @ts-expect-error BeforeInstallPromptEvent не типизирован в lib.dom
@@ -79,7 +72,7 @@ export function AppChrome({ hideInstall = false }: { hideInstall?: boolean }) {
     <>
       {!online && (
         <div className="bg-social/20 text-social text-sm text-center py-2 px-4">
-          {t("offline", { date: new Date().toLocaleString(locale) })}
+          {t("offline", { date: formatDateTime(new Date().toISOString(), locale) })}
         </div>
       )}
       {updateReady && (
@@ -101,11 +94,7 @@ export function AppChrome({ hideInstall = false }: { hideInstall?: boolean }) {
           )}
         </div>
       )}
-      <div className="flex justify-end px-4 pt-2">
-        <button onClick={logout} className="text-xs text-muted underline">
-          {t("logout")}
-        </button>
-      </div>
+      <AppHeader />
     </>
   );
 }

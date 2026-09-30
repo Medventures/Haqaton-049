@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { AppChrome } from "@/components/AppChrome";
 import { ParentNav } from "@/components/ParentNav";
 import { StatusBadge } from "@/components/StatusBadge";
-import { daysBetween, formatDate, isOpen, useParentData } from "@/lib/parent";
+import { daysBetween, formatDate, isOpen, monthName, useParentData } from "@/lib/parent";
 import { downloadIcs } from "@/lib/ics";
 import type { Step } from "@/lib/types";
 
@@ -70,8 +70,8 @@ export default function CalendarPage() {
   for (let d = 1; d <= daysInMonth; d++) cells.push(iso(month.y, month.m, d));
   while (cells.length % 7) cells.push(null);
 
-  const monthName = first.toLocaleDateString(locale === "kk" ? "kk-KZ" : "ru-RU", { month: "long", timeZone: "UTC" });
-  const monthTitle = `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${month.y}`;
+  const name = monthName(month.m, locale);
+  const monthTitle = `${name.charAt(0).toUpperCase()}${name.slice(1)} ${month.y}`;
   const shift = (delta: number) => {
     const m = month.m + delta;
     setMonth({ y: month.y + Math.floor(m / 12), m: ((m % 12) + 12) % 12 });
@@ -87,7 +87,7 @@ export default function CalendarPage() {
     <main className="min-h-dvh max-w-2xl mx-auto w-full">
       <AppChrome />
       <div className="px-4 sm:px-6 pb-6">
-        <h1 className="text-2xl font-medium pt-4 mb-4">{t("title")}</h1>
+        <h1 className="text-2xl font-semibold pt-6 mb-4">{t("title")}</h1>
 
         <div className="flex items-center justify-between mb-2">
           <button onClick={() => shift(-1)} aria-label={t("prevMonth")} className="tap-target min-w-11 min-h-11 rounded-lg border border-border">

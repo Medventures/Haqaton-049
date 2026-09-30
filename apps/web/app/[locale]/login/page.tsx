@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 import { api, ApiError } from "@/lib/api";
 
 export default function LoginPage() {
@@ -29,9 +30,12 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center px-6">
-      <form onSubmit={onSubmit} className="w-full max-w-sm flex flex-col gap-4">
-        <h1 className="text-2xl font-medium mb-2">{t("loginTitle")}</h1>
+    <main className="min-h-dvh flex items-center justify-center px-4">
+      <form onSubmit={onSubmit} className="w-full max-w-sm flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+        <Link href={`/${locale}`} className="font-semibold tracking-tight text-muted text-sm">
+          AqylRoute
+        </Link>
+        <h1 className="text-2xl font-semibold mb-2">{t("loginTitle")}</h1>
         <label className="flex flex-col gap-1">
           <span className="text-sm text-muted">{t("email")}</span>
           <input
@@ -39,7 +43,7 @@ export default function LoginPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="tap-target rounded-lg border border-border bg-card px-3 py-2"
+            className="tap-target rounded-xl border border-border bg-background px-3 py-2"
           />
         </label>
         <label className="flex flex-col gap-1">
@@ -49,14 +53,14 @@ export default function LoginPage() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="tap-target rounded-lg border border-border bg-card px-3 py-2"
+            className="tap-target rounded-xl border border-border bg-background px-3 py-2"
           />
         </label>
         {error && <p className="text-danger text-sm">{error}</p>}
         <button
           type="submit"
           disabled={loading}
-          className="tap-target rounded-lg bg-medicine text-background font-medium py-2 disabled:opacity-50"
+          className="tap-target rounded-xl bg-medicine text-background font-medium py-3 disabled:opacity-50"
         >
           {t("loginButton")}
         </button>

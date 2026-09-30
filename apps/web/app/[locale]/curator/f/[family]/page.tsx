@@ -6,11 +6,15 @@ import { useParams } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import type { PlanJson } from "@/lib/types";
 import { StatusBadge } from "@/components/StatusBadge";
+import { AppChrome } from "@/components/AppChrome";
+import { DownloadButton } from "@/components/FileButton";
+import Link from "next/link";
 
 type Service = { service_id: string; title_ru: string; title_kk: string };
 
 export default function CuratorFamilyPage() {
   const t = useTranslations("curator");
+  const tPdf = useTranslations("pdf");
   const locale = useLocale() as "ru" | "kk";
   const { family: familyIdParam } = useParams<{ family: string }>();
   const familyId = Number(familyIdParam);
@@ -59,9 +63,14 @@ export default function CuratorFamilyPage() {
   if (!plan) return <main className="p-10">…</main>;
 
   return (
-    <main className="min-h-dvh px-6 py-10 max-w-3xl mx-auto w-full">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-medium">
+    <main className="min-h-dvh max-w-3xl mx-auto w-full">
+      <AppChrome />
+      <div className="px-4 sm:px-6 py-6">
+      <Link href={`/${locale}/curator`} className="tap-target inline-flex items-center text-sm text-muted mb-2">
+        ← {t("families")}
+      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl font-semibold">
           C-{plan.family_id} · v{plan.version} · {plan.status}
         </h1>
         {plan.status === "draft" && (
@@ -75,7 +84,7 @@ export default function CuratorFamilyPage() {
 
       <div className="flex flex-col gap-2 mb-6">
         {plan.steps.map((s) => (
-          <div key={s.step_id} className="rounded-lg border border-border bg-card px-4 py-3">
+          <div key={s.step_id} className="rounded-xl border border-border bg-card px-4 py-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">
@@ -105,6 +114,11 @@ export default function CuratorFamilyPage() {
         ))}
       </div>
 
+      <div className="grid sm:grid-cols-2 gap-2 mb-6">
+        <DownloadButton href={`/api/reports/route/${familyId}.pdf?lang=${locale}`} title={tPdf("route")} />
+        <DownloadButton href={`/api/reports/summary/${familyId}.pdf?lang=${locale}`} title={tPdf("summary")} />
+      </div>
+
       {plan.status === "draft" && (
         <div className="flex gap-2">
           <select
@@ -124,6 +138,7 @@ export default function CuratorFamilyPage() {
           </button>
         </div>
       )}
+      </div>
     </main>
   );
 }

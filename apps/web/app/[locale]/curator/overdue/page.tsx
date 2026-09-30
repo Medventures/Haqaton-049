@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { AppChrome } from "@/components/AppChrome";
+import { CuratorTabs } from "@/components/CuratorTabs";
 
 type Row = { family_id: number; child_name: string; step_id: string; service_id: string; agency: string; deadline: string; escalation_level: number };
 
@@ -17,14 +19,17 @@ export default function OverduePage() {
   }, []);
 
   return (
-    <main className="min-h-dvh px-6 py-10 max-w-3xl mx-auto w-full">
-      <h1 className="text-2xl font-medium mb-6">{t("overdueScreen")}</h1>
+    <main className="min-h-dvh max-w-3xl mx-auto w-full">
+      <AppChrome />
+      <div className="px-4 sm:px-6 py-6">
+      <CuratorTabs current="overdue" />
+      <h1 className="text-2xl font-semibold mb-6">{t("overdueScreen")}</h1>
       <div className="flex flex-col gap-2">
         {rows.map((r, i) => (
           <Link
             key={i}
             href={`/${locale}/curator/f/${r.family_id}`}
-            className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
+            className="tap-target flex items-center justify-between gap-3 rounded-xl border border-danger/40 bg-card px-4 py-3"
           >
             <span>
               {r.child_name} · {r.service_id}
@@ -35,6 +40,7 @@ export default function OverduePage() {
           </Link>
         ))}
         {rows.length === 0 && <p className="text-muted">—</p>}
+      </div>
       </div>
     </main>
   );

@@ -48,11 +48,36 @@ export function daysBetween(fromIso: string, toIso: string) {
   return Math.round((b - a) / 86_400_000);
 }
 
+// Казахские названия месяцев есть не во всех браузерах (Intl откатывается на
+// английский), поэтому для kk формат собирается вручную.
+const KK_MONTHS = [
+  "қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым",
+  "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан",
+];
+
+export function monthName(month0: number, locale: string) {
+  if (locale === "kk") return KK_MONTHS[month0]!;
+  return new Date(Date.UTC(2000, month0, 1)).toLocaleDateString("ru-RU", { month: "long", timeZone: "UTC" });
+}
+
 export function formatDate(iso: string, locale: string, withYear = false) {
-  const d = new Date(`${iso}T00:00:00`);
-  return d.toLocaleDateString(locale === "kk" ? "kk-KZ" : "ru-RU", {
+  const y = +iso.slice(0, 4);
+  const m = +iso.slice(5, 7) - 1;
+  const d = +iso.slice(8, 10);
+  if (locale === "kk") return withYear ? `${y} ж. ${d} ${KK_MONTHS[m]}` : `${d} ${KK_MONTHS[m]}`;
+  return new Date(Date.UTC(y, m, d)).toLocaleDateString("ru-RU", {
     day: "numeric",
     month: "long",
+    timeZone: "UTC",
     ...(withYear ? { year: "numeric" } : {}),
   });
+}
+
+export function formatDateTime(isoDateTime: string, locale: string) {
+  const dt = new Date(isoDateTime);
+  const date = formatDate(
+    `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`,
+    locale,
+  );
+  return `${date}, ${String(dt.getHours()).padStart(2, "0")}:${String(dt.getMinutes()).padStart(2, "0")}`;
 }

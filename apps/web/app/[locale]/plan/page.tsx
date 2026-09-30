@@ -10,20 +10,23 @@ import { AGENCY_ICON } from "@/components/icons";
 import { StatusBadge } from "@/components/StatusBadge";
 import { AppChrome } from "@/components/AppChrome";
 import { ParentNav } from "@/components/ParentNav";
+import { DownloadButton } from "@/components/FileButton";
 import { formatDate } from "@/lib/parent";
 
 export default function PlanPage() {
   const t = useTranslations("plan");
   const tAgency = useTranslations("agency");
+  const tPdf = useTranslations("pdf");
+  const tUi = useTranslations("planUi");
   const locale = useLocale() as "ru" | "kk";
   const router = useRouter();
-  const [family, setFamily] = useState<{ id: number } | null>(null);
+  const [family, setFamily] = useState<{ id: number; child_name: string } | null>(null);
   const [plan, setPlan] = useState<PlanJson | null | "draft">(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     api
-      .get<{ id: number }>("/families/me")
+      .get<{ id: number; child_name: string }>("/families/me")
       .then((f) => {
         setFamily(f);
         return api.get<PlanJson>(`/plans/${f.id}`);
@@ -54,11 +57,9 @@ export default function PlanPage() {
     <main className="min-h-dvh max-w-2xl mx-auto w-full">
       <AppChrome />
       <div className="px-6 pb-10">
-      <div className="flex justify-between items-center mb-6 pt-4">
-        <h1 className="text-2xl font-medium">AqylRoute</h1>
-        <a href={`/api/reports/route/${family.id}.pdf?lang=${locale}`} className="text-sm underline">
-          скачать PDF
-        </a>
+      <div className="pt-6 mb-6">
+        <p className="text-sm text-muted">{tUi("child")}</p>
+        <h1 className="text-2xl font-semibold">{family.child_name}</h1>
       </div>
 
       <section className="mb-8">
@@ -91,6 +92,11 @@ export default function PlanPage() {
             </div>
           );
         })}
+      </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-medium mb-3">{tUi("downloads")}</h2>
+        <DownloadButton href={`/api/reports/route/${family.id}.pdf?lang=${locale}`} title={tPdf("plan")} hint={tPdf("planHint")} />
       </section>
       </div>
       <ParentNav current="plan" />

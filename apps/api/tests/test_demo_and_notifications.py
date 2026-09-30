@@ -53,3 +53,25 @@ def test_notifications_center_flow(client, db_session):
     resp = client.post("/api/notifications/read", json={"ids": ids})
     assert resp.status_code == 200
     assert resp.json()["updated"] == len(ids)
+
+
+def test_demo_quick_login(client, db_session, monkeypatch):
+    from app import config
+
+    parent = make_parent(db_session, email="parent.a@demo.kz", name="Родитель А")
+    make_curator(db_session)
+
+    assert client.get("/api/demo/accounts").status_code == 403
+    assert client.post("/api/demo/login", json={"key": "parent_a"}).status_code == 403
+
+    monkeypatch.setattr(config.get_settings(), "demo_mode", True)
+    accounts = client.get("/api/demo/accounts").json()
+    assert {a["key"] for a in accounts} == {"parent_a", "curator"}
+
+    resp = client.post("/api/demo/login", json={"key": "parent_a"})
+    assert resp.status_code == 200, resp.text
+    assert client.get("/api/auth/me").json()["id"] == parent.id
+
+    # Только демо-аккаунты, произвольный email не пускает.
+    assert client.post("/api/demo/login", json={"key": "someone@else.kz"}).status_code == 404
+    assert client.post("/api/demo/login", json={"key": "parent_b"}).status_code == 404

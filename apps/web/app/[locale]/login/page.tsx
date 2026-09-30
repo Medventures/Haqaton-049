@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { DemoLogin } from "@/components/DemoLogin";
 import Link from "next/link";
 import { api, ApiError } from "@/lib/api";
 
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const t = useTranslations("auth");
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
+  const role = useSearchParams().get("role");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center px-4">
+    <main className="min-h-dvh flex flex-col items-center justify-center gap-4 px-4 py-8">
       <form onSubmit={onSubmit} className="w-full max-w-sm flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
         <Link href={`/${locale}`} className="font-semibold tracking-tight text-muted text-sm">
           AqylRoute
@@ -65,6 +67,7 @@ export default function LoginPage() {
           {t("loginButton")}
         </button>
       </form>
+      <DemoLogin role={role} />
     </main>
   );
 }

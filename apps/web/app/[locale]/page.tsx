@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { EducationIcon, MedicineIcon, SocialIcon } from "@/components/icons";
+import { DemoLogin } from "@/components/DemoLogin";
 
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,6 +31,10 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
           <Link href={`/${locale}/login?role=curator`} className="tap-target flex items-center justify-center px-6 py-3 rounded-xl border border-border bg-card">
             {t("ctaCurator")}
           </Link>
+        </div>
+
+        <div className="w-full max-w-sm mt-6">
+          <DemoLogin />
         </div>
 
         <section className="w-full max-w-3xl mt-14">

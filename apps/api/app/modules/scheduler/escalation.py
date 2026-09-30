@@ -9,7 +9,7 @@ from datetime import date, timedelta
 from sqlalchemy.orm import Session
 
 from app.models import Escalation, Family, Interview, User
-from app.modules.engine.engine import MIN_DAYS
+from app.modules.engine.engine import MIN_DAYS, parse_profile_date
 from app.modules.notifications.service import notify
 from app.modules.plans.service import get_latest_plan
 
@@ -55,9 +55,9 @@ def _recompute_step_deadline(step: dict, catalog, today: date, profile: dict | N
     if sla["type"] == "days":
         new_deadline = start_date + timedelta(days=sla["value"])
     elif sla["type"] == "before_field":
-        field_value = _get(profile or {}, sla["field"])
-        if field_value:
-            new_deadline = date.fromisoformat(field_value) - timedelta(days=sla["days"])
+        field_date = parse_profile_date(_get(profile or {}, sla["field"]))
+        if field_date:
+            new_deadline = field_date - timedelta(days=sla["days"])
         else:
             new_deadline = start_date + timedelta(days=MIN_DAYS.get(step["service_id"], sla["days"]))
     else:

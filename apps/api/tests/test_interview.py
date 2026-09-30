@@ -130,3 +130,76 @@ def test_home_vs_school_day_place_changes_question_set(client, db_session):
     allowed_school = {q["id"] for q in flow.compute_allowed(catalog.questions, {"Q01": 8, "Q02": "no", "Q03": "school", "Q04": "karaganda_city"})}
     assert "Q09" in allowed_home
     assert "Q09" not in allowed_school
+
+
+def test_stale_question_is_rejected_and_start_resyncs(client, db_session):
+    """Сайт показывает Q12 (зависит от Q10), а на сервере ответ Q10 уже
+    отменён (другая вкладка, сброс демо-базы): ответ отвергается с 409, а
+    /start возвращает актуальный вопрос и число ответов для восстановления."""
+    curator = make_curator(db_session)
+    parent = make_parent(db_session)
+    make_family(db_session, curator, parent)
+    login(client, parent.email)
+
+    pool = _answer_pool(_load_fixture("case_b.json"))
+    body = client.post("/api/interview/start").json()
+    assert body["answered"] == 0
+    while body["question"]["id"] != "Q10":
+        qid = body["question"]["id"]
+        body = client.post("/api/interview/answer", json={"question_id": qid, "value": pool[qid]}).json()
+    answered_before_q10 = body["answered"]
+    client.post("/api/interview/answer", json={"question_id": "Q10", "value": "yes_with_ipr"})
+    client.post("/api/interview/back")  # отменили Q10 «в другой вкладке»
+
+    resp = client.post("/api/interview/answer", json={"question_id": "Q12", "value": ["none"]})
+    assert resp.status_code == 409
+
+    fresh = client.post("/api/interview/start").json()
+    assert fresh["answered"] == answered_before_q10
+    assert fresh["done"] is False
+
+
+def test_unknown_dates_do_not_break_plan(client, db_session):
+    """Ответ «Не знаю» на даты (Q07 срок ПМПК, Q11 переосвидетельствование)
+    раньше ронял построение плана, а интервью оставалось завершённым без плана."""
+    from app.models import CasePlan, Interview
+
+    curator = make_curator(db_session)
+    parent = make_parent(db_session)
+    family = make_family(db_session, curator, parent)
+    login(client, parent.email)
+
+    pool = _answer_pool(_load_fixture("case_b.json"))
+    pool.update({"Q07": "unknown", "Q10": "yes_with_ipr", "Q11": "unknown"})
+    asked = _run_interview(client, pool)
+    assert "Q11" in asked or "Q07" in asked
+
+    resp = client.post("/api/interview/finish")
+    assert resp.status_code == 200, resp.text
+    assert db_session.query(CasePlan).filter(CasePlan.family_id == family.id).count() == 1
+    assert db_session.query(Interview).filter(Interview.family_id == family.id).one().finished_at is not None
+
+
+def test_finish_failure_keeps_interview_open(client, db_session, monkeypatch):
+    from app.models import Interview
+    from app.modules.interview import service
+
+    curator = make_curator(db_session)
+    parent = make_parent(db_session)
+    family = make_family(db_session, curator, parent)
+    login(client, parent.email)
+    _run_interview(client, _answer_pool(_load_fixture("case_a.json")))
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("engine failure")
+
+    monkeypatch.setattr(service, "build_plan", boom)
+    try:
+        client.post("/api/interview/finish")
+    except RuntimeError:
+        pass
+    db_session.expire_all()
+    assert db_session.query(Interview).filter(Interview.family_id == family.id).one().finished_at is None
+
+    monkeypatch.undo()
+    assert client.post("/api/interview/finish").status_code == 200

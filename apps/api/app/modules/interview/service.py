@@ -32,15 +32,20 @@ def _answers_dict(interview: Interview) -> dict:
     return {a["question_id"]: a["value"] for a in interview.answers}
 
 
+def _next_state(catalog, answers: dict) -> dict:
+    """Следующий вопрос и число уже данных ответов: по нему web показывает
+    прогресс и восстанавливается, если его состояние разошлось с сервером."""
+    state = flow.compute_next(catalog.questions, answers)
+    if state["done"]:
+        return {"done": True, "answered": len(answers)}
+    return {"done": False, "question": catalog.questions[state["question_id"]], "answered": len(answers)}
+
+
 def start(db: Session, family_id: int) -> dict:
     catalog = get_catalog()
     interview = _get_or_create_interview(db, family_id)
     answers = _answers_dict(interview)
-    state = flow.compute_next(catalog.questions, answers)
-    if state["done"]:
-        return {"done": True}
-    question = catalog.questions[state["question_id"]]
-    return {"done": False, "question": question}
+    return _next_state(catalog, answers)
 
 
 def answer(db: Session, family_id: int, question_id: str, value) -> dict:
@@ -68,10 +73,7 @@ def answer(db: Session, family_id: int, question_id: str, value) -> dict:
     db.commit()
     db.refresh(interview)
 
-    state = flow.compute_next(catalog.questions, _answers_dict(interview))
-    if state["done"]:
-        return {"done": True}
-    return {"done": False, "question": catalog.questions[state["question_id"]]}
+    return _next_state(catalog, _answers_dict(interview))
 
 
 def back(db: Session, family_id: int) -> dict:
@@ -86,10 +88,7 @@ def back(db: Session, family_id: int) -> dict:
     db.commit()
     db.refresh(interview)
 
-    state = flow.compute_next(catalog.questions, _answers_dict(interview))
-    if state["done"]:
-        return {"done": True}
-    return {"done": False, "question": catalog.questions[state["question_id"]]}
+    return _next_state(catalog, _answers_dict(interview))
 
 
 def finish(db: Session, family_id: int) -> dict:
@@ -107,13 +106,9 @@ def finish(db: Session, family_id: int) -> dict:
         parsed = llm_client.parse_q17(answers["Q17"])
         profile = flow.merge_q17_flags(profile, parsed)
 
-    interview.profile = profile
-    interview.unknown_fields = profile["unknown_fields"]
-    interview.finished_at = datetime.now(timezone.utc)
-    db.add(interview)
-    db.commit()
-    db.refresh(interview)
-
+    # План строится до отметки «интервью завершено»: если построение упадёт,
+    # интервью останется открытым и его можно будет завершить повторно, а не
+    # окажется завершённым без плана (тогда /start начинал бы новое пустое).
     computed_at = clock.today(db)
     steps = build_plan(profile, catalog, computed_at)
     for step in steps:
@@ -122,6 +117,13 @@ def finish(db: Session, family_id: int) -> dict:
             step[f"explanation_{lang}"] = llm_client.explain_step(
                 service, lang, needs_clarification=step["needs_clarification"], deadline_compressed=step["deadline_compressed"]
             )
+
+    interview.profile = profile
+    interview.unknown_fields = profile["unknown_fields"]
+    interview.finished_at = datetime.now(timezone.utc)
+    db.add(interview)
+    db.commit()
+    db.refresh(interview)
 
     plan = create_draft_plan(
         db,

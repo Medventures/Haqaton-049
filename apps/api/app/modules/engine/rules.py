@@ -134,11 +134,11 @@ def rule_r13(profile, computed_at, catalog, added_so_far):
 
 
 def rule_r14(profile, computed_at, catalog, added_so_far):
-    review_date = _get(profile, "disability.review_date")
-    if not review_date:
+    from app.modules.engine.engine import parse_profile_date
+
+    d = parse_profile_date(_get(profile, "disability.review_date"))
+    if d is None:
         return []
-    from datetime import date as _date
-    d = _date.fromisoformat(review_date)
     if d <= computed_at + timedelta(days=90):
         return [_hit("SOC_DISABILITY_REVIEW", "high")]
     return []

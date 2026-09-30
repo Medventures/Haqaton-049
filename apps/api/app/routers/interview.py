@@ -42,7 +42,7 @@ def _question_payload(question: dict | None):
 def _result(state: dict):
     if state["done"]:
         return {"done": True, **{k: v for k, v in state.items() if k != "done"}}
-    return {"done": False, "question": _question_payload(state["question"])}
+    return {"done": False, "question": _question_payload(state["question"]), "answered": state.get("answered", 0)}
 
 
 @router.post("/start")

@@ -25,6 +25,17 @@ class EngineError(Exception):
         self.message = message
 
 
+def parse_profile_date(value) -> date | None:
+    """Дата из профиля. Вопросы date_or_unknown (Q07, Q11) хранят «unknown»,
+    если родитель не знает дату: это «дата неизвестна», а не ошибка."""
+    if not value or value == "unknown":
+        return None
+    try:
+        return date.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def _get(profile, path):
     node = profile
     for part in path.split("."):
@@ -83,9 +94,8 @@ def _compute_dates(profile, computed_at, catalog, added):
         if sla["type"] == "days":
             dl = start_date + timedelta(days=sla["value"])
         elif sla["type"] == "before_field":
-            field_value = _get(profile, sla["field"])
-            if field_value:
-                field_date = date.fromisoformat(field_value)
+            field_date = parse_profile_date(_get(profile, sla["field"]))
+            if field_date:
                 dl = field_date - timedelta(days=sla["days"])
             else:
                 min_days = MIN_DAYS.get(sid, sla["days"])

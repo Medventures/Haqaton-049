@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { AppChrome } from "@/components/AppChrome";
 import { BLOCK_ORDER, blockOf, type BlockKey } from "@/lib/interviewBlocks";
 
@@ -21,7 +21,7 @@ type Question = {
   max_length?: number;
 };
 
-type InterviewState = { done: boolean; question?: Question };
+type InterviewState = { done: boolean; question?: Question; answered?: number };
 type Screen = { kind: "intro" } | { kind: "question" } | { kind: "section"; done: BlockKey; next: BlockKey };
 
 /**
@@ -43,6 +43,7 @@ export default function InterviewPage() {
   const [value, setValue] = useState<unknown>(undefined);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (!navigator.onLine) {
@@ -52,38 +53,64 @@ export default function InterviewPage() {
     api
       .post<InterviewState>("/interview/start")
       .then((s) => {
+        if (s.done) return finalize();
         setState(s);
+        setAnswered(s.answered ?? 0);
         setValue(undefined);
-        // Первый вопрос всегда Q01: значит интервью только начинается.
-        if (s.question?.id === "Q01") setScreen({ kind: "intro" });
+        if (!s.answered) setScreen({ kind: "intro" });
       })
       .catch((e) => setError(String(e)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /** Все ответы даны: строим план (повторное завершение не ошибка) и уходим на него. */
+  async function finalize() {
+    try {
+      await api.post("/interview/finish");
+    } catch (e) {
+      if (!(e instanceof ApiError && e.status === 409)) throw e;
+    }
+    router.push(`/${locale}/plan?justFinished=1`);
+  }
+
+  /**
+   * Состояние сайта разошлось с сервером (ответы сброшены, анкету открыли в
+   * другой вкладке): берём с сервера актуальный вопрос и продолжаем с него.
+   */
+  async function resync() {
+    const fresh = await api.post<InterviewState>("/interview/start");
+    if (fresh.done) return finalize();
+    setState(fresh);
+    setAnswered(fresh.answered ?? 0);
+    setValue(undefined);
+    setScreen({ kind: "question" });
+    setNotice(tUi("resynced"));
+  }
+
   async function submit() {
     if (!state?.question) return;
     setBusy(true);
     setError(null);
+    setNotice(null);
     const current = blockOf(state.question.id);
     try {
       const next = await api.post<InterviewState>("/interview/answer", {
         question_id: state.question.id,
         value,
       });
-      setAnswered((n) => n + 1);
+      setAnswered((n) => next.answered ?? n + 1);
       setValue(undefined);
       setVisited((v) => (v.includes(current) ? v : [...v, current]));
       if (next.done) {
-        await api.post("/interview/finish");
-        router.push(`/${locale}/plan?justFinished=1`);
+        await finalize();
         return;
       }
       setState(next);
       const upcoming = next.question ? blockOf(next.question.id) : current;
       setScreen(upcoming !== current ? { kind: "section", done: current, next: upcoming } : { kind: "question" });
     } catch (e) {
-      setError(String(e));
+      if (e instanceof ApiError && e.status === 409) await resync().catch((err) => setError(String(err)));
+      else setError(e instanceof ApiError ? e.message : String(e));
     } finally {
       setBusy(false);
     }
@@ -92,14 +119,17 @@ export default function InterviewPage() {
   async function back() {
     setBusy(true);
     setError(null);
+    setNotice(null);
     try {
       const prev = await api.post<InterviewState>("/interview/back");
+      if (prev.done) return await finalize();
       setState(prev);
       setValue(undefined);
-      setAnswered((n) => Math.max(0, n - 1));
+      setAnswered((n) => prev.answered ?? Math.max(0, n - 1));
       setScreen({ kind: "question" });
     } catch (e) {
-      setError(String(e));
+      if (e instanceof ApiError && e.status === 409) await resync().catch((err) => setError(String(err)));
+      else setError(e instanceof ApiError ? e.message : String(e));
     } finally {
       setBusy(false);
     }
@@ -186,6 +216,8 @@ export default function InterviewPage() {
       <div className="rounded-xl border border-border bg-card px-4 py-3 text-sm mb-6">
         <span className="font-medium">{t("why")}:</span> <span className="text-muted">{q[`hint_${locale}`]}</span>
       </div>
+
+      {notice && <p className="rounded-xl border border-social/50 px-4 py-3 text-sm mb-4">{notice}</p>}
 
       <QuestionInput question={q} locale={locale} value={value} onChange={setValue} />
 

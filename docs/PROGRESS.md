@@ -79,7 +79,37 @@ cd apps/api
 
 Известные ограничения зафиксированы в `docs/DECISIONS.md` и `docs/OPEN_QUESTIONS.md`: версии плана создаются только на 3 события (черновик/правка/подтверждение), LLM-модуль только в режиме заглушки, ответ родителя на "уточнение от куратора" не реализован (нужен для этапа 2 вместе с уведомлениями).
 
-## Этап 2. Сроки, эскалация, документы, уведомления, PDF — не начат
+## Этап 2. Сроки, эскалация, документы, уведомления, PDF — готово
+
+Что сделано:
+
+- `apps/api/app/modules/scheduler/escalation.py` — `recompute_family()`: просрочка, уровни эскалации 0-3 (раздел 11.3, каждый уровень пишется в `escalations` один раз на шаг), пересчёт сроков зависимых шагов, текст обращения уровня 3. Вызывается на каждый `GET /plans/{family}` и раз в час через APScheduler (`main.py`, best-effort — не критично для тестов).
+- `apps/api/app/modules/documents/service.py` — загрузка документа, извлечение текста (`pdfplumber` для цифровых PDF), разбор через LLM (вызов 4), обновление `pmpk.valid_until`/`disability.review_date` в профиле при совпадении `doc_type`.
+- `apps/api/app/modules/llm/` — `filter.py` (фильтр формулировок по `data/filter_patterns.json`), `cache.py` (SHA-256 кеш в `llm_cache`), `client.py` дополнен реальным вызовом OpenAI (structured outputs, `temperature=0`, `seed=42`) для вызовов 1-4 — включается только при непустом `OPENAI_API_KEY` (не покрыт тестами, см. `docs/OPEN_QUESTIONS.md`).
+- `apps/api/app/modules/notifications/service.py` + `routers/notifications.py` — центр уведомлений и email-дубль через `outbox` при `MAIL_MODE=console`; события `draft_ready`, `plan_approved`, `red_flag`, `escalation_0..3` подключены.
+- `apps/api/app/modules/reports/pdf.py` + `routers/reports.py` — три PDF-отчёта (`route`, `visit`, `summary`) на `ru`/`kk` через WeasyPrint, общий `base.css`, подпись "не является медицинским заключением" и дата формирования на каждой странице.
+- `apps/api/app/routers/demo.py` — `POST /demo/time-shift` (абсолютный `offset_days`, не дельта — см. `docs/DECISIONS.md` не требовалось, значение уже соответствует таблице 19.3), `POST /demo/reset`, `GET /dev/mail`, все три только при `DEMO_MODE=true`.
+- Найден и исправлен баг персистентности: мутация вложенных словарей в `plan_json`/`profile` "на месте" аліasилась с закешированным значением SQLAlchemy и UPDATE молча пропускался — см. `docs/DECISIONS.md`. Регрессия закрыта тестами с явным `db_session.expire_all()`.
+
+Как проверить руками:
+
+```bash
+cd apps/api
+.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pytest -v
+```
+
+Ожидаемый результат: 162 теста зелёные.
+
+Проверки этапа (раздел 3, «Этап 2»):
+
+- [x] сценарии сдвига времени из раздела 19.3 дают ожидаемые уровни эскалации и сроки — `tests/test_escalation.py` (все 6 строк таблицы, включая пересчёт срока S2).
+- [x] загрузка тестового PDF заключения ПМПК обновляет `pmpk.valid_until` — `tests/test_documents.py` (реальный PDF собран через WeasyPrint и распарсен через `pdfplumber`, вызов 4 LLM замокан per раздел 12 "тесты всегда используют заглушку или мок").
+- [x] все три PDF-отчёта генерируются на обоих языках — `tests/test_reports.py` (6 тестов: 3 отчёта × 2 языка).
+
+Известные ограничения — в `docs/OPEN_QUESTIONS.md`: OCR сканов не реализован (нет `tesseract` в окружении), реальный OpenAI-путь не протестирован (нет ключа), `POST /demo/reset` не откатывает данные семей полностью.
+
+## Этап 3. Web: родитель и куратор — не начат
 ## Этап 3. Web: родитель и куратор — не начат
 ## Этап 4. PWA — не начат
 ## Этап 5. Демо и деплой — не начат

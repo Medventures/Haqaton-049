@@ -3,6 +3,7 @@
 Запускается раз в час и при каждом GET /plans/{family}. Текущая дата —
 только через `app.clock.today()`.
 """
+import copy
 from datetime import date, timedelta
 
 from sqlalchemy.orm import Session
@@ -78,7 +79,7 @@ def recompute_family(db: Session, family: Family, catalog, today: date | None = 
     if plan is None or plan.status not in ("draft", "approved"):
         return {"changed": False}
 
-    steps = list(plan.plan_json["steps"])
+    steps = copy.deepcopy(plan.plan_json["steps"])
     steps_by_id = {s["step_id"]: s for s in steps}
     newly_overdue = set()
     changed = False

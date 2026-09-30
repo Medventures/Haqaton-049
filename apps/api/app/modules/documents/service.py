@@ -6,6 +6,7 @@
 LLM-модуль (вызов 4), в режиме заглушки возвращает пустые поля, поэтому
 тесты этого модуля мокают `llm_client.parse_document`.
 """
+import copy
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -58,7 +59,7 @@ def _update_profile(db: Session, family_id: int, doc_type: str, value: str | Non
     )
     if interview is None:
         return
-    profile = dict(interview.profile or {})
+    profile = copy.deepcopy(interview.profile or {})
     node = profile
     parts = field_path.split(".")
     for part in parts[:-1]:

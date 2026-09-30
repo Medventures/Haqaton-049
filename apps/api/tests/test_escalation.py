@@ -38,6 +38,9 @@ def test_time_shift_escalation_levels(db_session, offset_days, today_str, expect
     today = date.fromisoformat(today_str)
     recompute_family(db_session, family, catalog, today=today)
 
+    # expire_all форсирует перечитывание из БД, а не из identity map —
+    # ловит регрессию "мутация вложенного словаря не долетает до UPDATE".
+    db_session.expire_all()
     plan = get_latest_plan(db_session, family.id)
     steps_by_id = {s["step_id"]: s for s in plan.plan_json["steps"]}
     s1 = steps_by_id["S1"]

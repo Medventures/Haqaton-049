@@ -5,6 +5,7 @@
 Изменения статуса шага (11.4), перенос срока и переосчёт планировщиком
 меняют текущую версию на месте.
 """
+import copy
 from datetime import datetime, timezone
 
 from sqlalchemy import select
@@ -203,7 +204,10 @@ def patch_step_status(
     plan = get_latest_plan(db, family.id)
     if plan is None:
         raise not_found("План ещё не построен")
-    steps = list(plan.plan_json["steps"])
+    # deepcopy: иначе мутация вложенных словарей "на месте" аліasится с
+    # уже закешированным SQLAlchemy значением JSON-колонки, и UPDATE
+    # молча пропускается (see docs/DECISIONS.md).
+    steps = copy.deepcopy(plan.plan_json["steps"])
     step = next((s for s in steps if s["step_id"] == step_id), None)
     if step is None:
         raise not_found(f"Шаг {step_id} не найден")

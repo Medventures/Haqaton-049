@@ -1,0 +1,122 @@
+[
+  {
+    "doc_type": "birth_cert",
+    "title_ru": "Свидетельство о рождении",
+    "title_kk": "Туу туралы куәлік",
+    "validity_ru": "бессрочно",
+    "validity_kk": "мерзімсіз",
+    "issuer_ru": "ЗАГС",
+    "issuer_kk": "АХАЖ",
+    "note_ru": "Электронная копия нужна, если ребёнок родился вне РК или нет сведений в ИС ЗАГС",
+    "note_kk": "Электрондық көшірме бала ҚР шегінен тыс туылса немесе АХАЖ АЖ-де мәлімет болмаса қажет",
+    "needs_review": true
+  },
+  {
+    "doc_type": "pmpk_conclusion",
+    "title_ru": "Заключение ПМПК",
+    "title_kk": "ПМПК қорытындысы",
+    "validity_ru": "поле «действительно до»",
+    "validity_kk": "«жарамды мерзімі» өрісі бойынша",
+    "issuer_ru": "ПМПК",
+    "issuer_kk": "ПМПК",
+    "note_ru": "При загрузке обновляет pmpk.valid_until",
+    "note_kk": "Жүктеу кезінде pmpk.valid_until мәнін жаңартады",
+    "needs_review": true
+  },
+  {
+    "doc_type": "disability_conclusion",
+    "title_ru": "Заключение об инвалидности",
+    "title_kk": "Мүгедектік туралы қорытынды",
+    "validity_ru": "до переосвидетельствования",
+    "validity_kk": "қайта куәландыруға дейін",
+    "issuer_ru": "МСЭ",
+    "issuer_kk": "МӘС",
+    "note_ru": "При загрузке обновляет disability.review_date",
+    "note_kk": "Жүктеу кезінде disability.review_date мәнін жаңартады",
+    "needs_review": true
+  },
+  {
+    "doc_type": "ipr",
+    "title_ru": "Индивидуальная программа реабилитации",
+    "title_kk": "Жеке оңалту бағдарламасы",
+    "validity_ru": "по документу",
+    "validity_kk": "құжат бойынша",
+    "issuer_ru": "МСЭ",
+    "issuer_kk": "МӘС",
+    "note_ru": null,
+    "note_kk": null,
+    "needs_review": true
+  },
+  {
+    "doc_type": "vkk_home",
+    "title_ru": "Заключение ВКК об обучении на дому",
+    "title_kk": "Үйде оқыту туралы ДКК қорытындысы",
+    "validity_ru": "по документу",
+    "validity_kk": "құжат бойынша",
+    "issuer_ru": "медорганизация",
+    "issuer_kk": "медициналық ұйым",
+    "note_ru": null,
+    "note_kk": null,
+    "needs_review": true
+  },
+  {
+    "doc_type": "characteristic",
+    "title_ru": "Психолого-педагогическая характеристика",
+    "title_kk": "Психологиялық-педагогикалық мінездеме",
+    "validity_ru": "не указан",
+    "validity_kk": "көрсетілмеген",
+    "issuer_ru": "сад или школа",
+    "issuer_kk": "балабақша немесе мектеп",
+    "note_ru": null,
+    "note_kk": null,
+    "needs_review": true
+  },
+  {
+    "doc_type": "medical_extract",
+    "title_ru": "Выписки врачей",
+    "title_kk": "Дәрігерлердің үзінділері",
+    "validity_ru": "не указан",
+    "validity_kk": "көрсетілмеген",
+    "issuer_ru": "медорганизация",
+    "issuer_kk": "медициналық ұйым",
+    "note_ru": null,
+    "note_kk": null,
+    "needs_review": true
+  },
+  {
+    "doc_type": "child_works",
+    "title_ru": "Рисунки и работы ребёнка",
+    "title_kk": "Баланың суреттері мен жұмыстары",
+    "validity_ru": "не указан",
+    "validity_kk": "көрсетілмеген",
+    "issuer_ru": "родитель",
+    "issuer_kk": "ата-ана",
+    "note_ru": "ПМПК может запросить для углублённого обследования",
+    "note_kk": "ПМПК тереңдетілген тексеру үшін сұрата алады",
+    "needs_review": true
+  },
+  {
+    "doc_type": "medical_card_052",
+    "title_ru": "Медицинская карта амбулаторного пациента, форма 052/у",
+    "title_kk": "Амбулаториялық пациенттің медициналық картасы, 052/у нысаны",
+    "validity_ru": "не указан",
+    "validity_kk": "көрсетілмеген",
+    "issuer_ru": "медорганизация",
+    "issuer_kk": "медициналық ұйым",
+    "note_ru": "ПМПК запрашивает сама, в кошелёк не загружается, в блок «Не хватает» не попадает",
+    "note_kk": "ПМПК өзі сұратады, әмиянға жүктелмейді, «Жетіспейді» блогына түспейді",
+    "needs_review": true
+  },
+  {
+    "doc_type": "parent_id",
+    "title_ru": "Удостоверение личности родителя",
+    "title_kk": "Ата-ананың жеке куәлігі",
+    "validity_ru": "по документу",
+    "validity_kk": "құжат бойынша",
+    "issuer_ru": "госорган",
+    "issuer_kk": "мемлекеттік орган",
+    "note_ru": "Нужно только для нерезидентов РК",
+    "note_kk": "Тек ҚР резиденті емес адамдарға қажет",
+    "needs_review": true
+  }
+]

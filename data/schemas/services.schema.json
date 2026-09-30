@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aqylroute.local/schemas/services.schema.json",
+  "title": "AqylRoute services catalog",
+  "type": "array",
+  "minItems": 1,
+  "items": { "$ref": "#/definitions/service" },
+  "definitions": {
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "service_id", "title_ru", "title_kk", "agency", "responsible",
+        "predecessors_any", "documents", "sla", "sla_verified", "age_window",
+        "explanation_template_ru", "explanation_template_kk", "source_ids", "provider_ids"
+      ],
+      "properties": {
+        "service_id": {
+          "type": "string",
+          "enum": [
+            "MED_URGENT", "MED_DEV_CONSULT", "MED_VKK_HOME", "MED_MSE_REFERRAL",
+            "EDU_EARLY_HELP", "EDU_CHARACTERISTIC", "EDU_PMPK", "EDU_PMPK_RENEW",
+            "EDU_ASSISTANT", "EDU_KPPK", "EDU_ENROLL",
+            "SOC_MSE", "SOC_DISABILITY_REVIEW", "SOC_BENEFITS", "SOC_REHAB"
+          ]
+        },
+        "title_ru": { "type": "string", "minLength": 1 },
+        "title_kk": { "type": "string", "minLength": 1 },
+        "agency": { "type": "string", "enum": ["medicine", "education", "social"] },
+        "responsible": { "type": "string", "enum": ["parent", "education_org", "curator"] },
+        "predecessors_any": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "documents": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required", "if_present", "on_request", "agency_requests"],
+          "properties": {
+            "required": { "type": "array", "items": { "type": "string" } },
+            "if_present": { "type": "array", "items": { "type": "string" } },
+            "on_request": { "type": "array", "items": { "type": "string" } },
+            "agency_requests": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "sla": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "value"],
+              "properties": {
+                "type": { "const": "days" },
+                "value": { "type": "integer", "minimum": 1 }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "field", "days"],
+              "properties": {
+                "type": { "const": "before_field" },
+                "field": { "type": "string", "minLength": 1 },
+                "days": { "type": "integer", "minimum": 1 }
+              }
+            }
+          ]
+        },
+        "sla_verified": { "type": "boolean" },
+        "sla_verified_note": { "type": "string" },
+        "age_window": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["max_age"],
+              "properties": {
+                "max_age": { "type": "integer", "minimum": 0 },
+                "note": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "explanation_template_ru": { "type": "string", "minLength": 1 },
+        "explanation_template_kk": { "type": "string", "minLength": 1 },
+        "source_ids": { "type": "array", "items": { "type": "string" } },
+        "provider_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

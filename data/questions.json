@@ -1,0 +1,373 @@
+[
+  {
+    "id": "Q01",
+    "text_ru": "Сколько лет ребёнку?",
+    "text_kk": "Балаңызға неше жас?",
+    "hint_ru": "Возраст определяет, какие услуги и сроки подходят ребёнку.",
+    "hint_kk": "Жас бала үшін қандай қызметтер мен мерзімдер сай келетінін анықтайды.",
+    "answer_type": "number",
+    "min": 0,
+    "max": 17,
+    "options": [],
+    "show_if": "always",
+    "profile_field": "child.age",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 1,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q02",
+    "text_ru": "Есть ли у ребёнка заключение врача об особенностях развития?",
+    "text_kk": "Балаңызда даму ерекшеліктері туралы дәрігердің қорытындысы бар ма?",
+    "hint_ru": "Если заключения ещё нет, мы предложим консультацию врача-специалиста как первый шаг.",
+    "hint_kk": "Егер қорытынды әлі болмаса, бірінші қадам ретінде маман дәрігердің кеңесін ұсынамыз.",
+    "answer_type": "single",
+    "options": [
+      { "code": "yes", "label_ru": "Да", "label_kk": "Иә" },
+      { "code": "no", "label_ru": "Нет", "label_kk": "Жоқ" },
+      { "code": "in_progress", "label_ru": "Обследуемся сейчас", "label_kk": "Қазір тексеруден өтіп жатырмыз" }
+    ],
+    "show_if": "always",
+    "profile_field": "child.doctor_conclusion",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 2,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q03",
+    "text_ru": "Где ребёнок проводит день?",
+    "text_kk": "Балаңыз күндіз қайда болады?",
+    "hint_ru": "Это помогает подобрать вопросы и шаги, связанные с садом, школой или домашним обучением.",
+    "hint_kk": "Бұл балабақша, мектеп немесе үйде оқытуға қатысты сұрақтар мен қадамдарды таңдауға көмектеседі.",
+    "answer_type": "single",
+    "options": [
+      { "code": "home", "label_ru": "Дома", "label_kk": "Үйде" },
+      { "code": "kindergarten", "label_ru": "Детский сад", "label_kk": "Балабақшада" },
+      { "code": "school", "label_ru": "Школа", "label_kk": "Мектепте" },
+      { "code": "other", "label_ru": "Другое", "label_kk": "Басқа" }
+    ],
+    "show_if": "always",
+    "profile_field": "child.day_place",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 3,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q04",
+    "text_ru": "В каком городе или районе вы живёте?",
+    "text_kk": "Сіз қай қалада немесе ауданда тұрасыз?",
+    "hint_ru": "Регион определяет, какой поставщик услуг будет указан в плане.",
+    "hint_kk": "Өңір жоспарда қай қызмет көрсетуші көрсетілетінін анықтайды.",
+    "answer_type": "single",
+    "options": [
+      { "code": "karaganda_city", "label_ru": "г. Караганда", "label_kk": "Қарағанды қаласы" },
+      { "code": "karaganda_region", "label_ru": "Карагандинская область, другой населённый пункт", "label_kk": "Қарағанды облысы, басқа елді мекен" },
+      { "code": "other_region", "label_ru": "Другой регион", "label_kk": "Басқа өңір" }
+    ],
+    "show_if": "always",
+    "profile_field": "family.region",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 4,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q05",
+    "text_ru": "Проходил ли ребёнок ПМПК?",
+    "text_kk": "Балаңыз ПМПК-дан өтті ме?",
+    "hint_ru": "Ответ определяет, нужно ли направлять на первичное обследование или на пересмотр заключения.",
+    "hint_kk": "Жауап алғашқы тексеруге немесе қорытындыны қайта қарауға жіберу қажет пе, соны анықтайды.",
+    "answer_type": "single",
+    "options": [
+      { "code": "no", "label_ru": "Нет", "label_kk": "Жоқ" },
+      { "code": "valid", "label_ru": "Да, заключение действует", "label_kk": "Иә, қорытынды әлі күшінде" },
+      { "code": "expiring", "label_ru": "Да, истекает в ближайшие 3 месяца", "label_kk": "Иә, жақын 3 айда мерзімі аяқталады" },
+      { "code": "expired", "label_ru": "Да, срок истёк", "label_kk": "Иә, мерзімі аяқталды" },
+      { "code": "unknown", "label_ru": "Не знаю", "label_kk": "Білмеймін" }
+    ],
+    "show_if": { "q": "Q01", "op": "gte", "value": 2 },
+    "profile_field": "pmpk.status",
+    "priority": "high",
+    "mandatory": false,
+    "order": 5,
+    "source_ids": ["SRC_ADILET_223"],
+    "needs_review": true
+  },
+  {
+    "id": "Q06",
+    "text_ru": "Что рекомендовано в заключении ПМПК?",
+    "text_kk": "ПМПК қорытындысында не ұсынылған?",
+    "hint_ru": "Рекомендации из заключения определяют, какие услуги добавить в план.",
+    "hint_kk": "Қорытындыдағы ұсынымдар жоспарға қандай қызметтерді қосу керектігін анықтайды.",
+    "answer_type": "multi",
+    "options": [
+      { "code": "assistant", "label_ru": "Педагог-ассистент", "label_kk": "Педагог-ассистент" },
+      { "code": "kppk", "label_ru": "Кабинет психолого-педагогической коррекции", "label_kk": "Психологиялық-педагогикалық түзету кабинеті" },
+      { "code": "rehab", "label_ru": "Реабилитационный центр", "label_kk": "Оңалту орталығы" },
+      { "code": "special_program", "label_ru": "Специальная или индивидуальная программа", "label_kk": "Арнайы немесе жеке бағдарлама" },
+      { "code": "home_learning", "label_ru": "Обучение на дому", "label_kk": "Үйде оқыту" },
+      { "code": "dont_remember", "label_ru": "Не помню", "label_kk": "Есімде жоқ" }
+    ],
+    "show_if": { "q": "Q05", "op": "in", "value": ["valid", "expiring", "expired"] },
+    "profile_field": "pmpk.recommendations",
+    "priority": "high",
+    "mandatory": false,
+    "order": 6,
+    "source_ids": ["SRC_ADILET_223"],
+    "needs_review": true
+  },
+  {
+    "id": "Q07",
+    "text_ru": "До какой даты действует заключение ПМПК?",
+    "text_kk": "ПМПК қорытындысы қай күнге дейін жарамды?",
+    "hint_ru": "Дата определяет срок пересмотра заключения.",
+    "hint_kk": "Күн қорытындыны қайта қарау мерзімін анықтайды.",
+    "answer_type": "date_or_unknown",
+    "options": [
+      { "code": "unknown", "label_ru": "Не знаю", "label_kk": "Білмеймін" }
+    ],
+    "show_if": { "q": "Q05", "op": "in", "value": ["valid", "expiring"] },
+    "profile_field": "pmpk.valid_until",
+    "priority": "high",
+    "mandatory": false,
+    "order": 7,
+    "source_ids": ["SRC_ADILET_223"],
+    "needs_review": true
+  },
+  {
+    "id": "Q08",
+    "text_ru": "Планируется ли в ближайший год поступление в сад или школу, переход или смена формы обучения?",
+    "text_kk": "Алдағы бір жылда балабақшаға немесе мектепке түсу, ауысу немесе оқыту нысанын өзгерту жоспарлануда ма?",
+    "hint_ru": "Если планируется переход, мы добавим шаг по зачислению с учётом рекомендаций.",
+    "hint_kk": "Егер ауысу жоспарланса, ұсынымдарды ескере отырып тіркелу қадамын қосамыз.",
+    "answer_type": "single",
+    "options": [
+      { "code": "yes", "label_ru": "Да", "label_kk": "Иә" },
+      { "code": "no", "label_ru": "Нет", "label_kk": "Жоқ" }
+    ],
+    "show_if": { "q": "Q01", "op": "gte", "value": 2 },
+    "profile_field": "education.change_planned",
+    "priority": "medium",
+    "mandatory": false,
+    "order": 8,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q09",
+    "text_ru": "Может ли ребёнок посещать сад или школу по состоянию здоровья?",
+    "text_kk": "Балаңыз денсаулық жағдайына байланысты балабақша немесе мектепке бара алады ма?",
+    "hint_ru": "Ответ помогает понять, нужно ли заключение ВКК об обучении на дому.",
+    "hint_kk": "Жауап үйде оқыту туралы ДКК қорытындысы қажет пе, соны түсінуге көмектеседі.",
+    "answer_type": "single",
+    "options": [
+      { "code": "yes", "label_ru": "Да", "label_kk": "Иә" },
+      { "code": "hard", "label_ru": "С трудом", "label_kk": "Қиындықпен" },
+      { "code": "home_recommended", "label_ru": "Нет, врачи рекомендуют обучение на дому", "label_kk": "Жоқ, дәрігерлер үйде оқытуды ұсынады" }
+    ],
+    "show_if": {
+      "any": [
+        { "q": "Q03", "op": "eq", "value": "home" },
+        { "q": "Q02", "op": "eq", "value": "yes" }
+      ]
+    },
+    "profile_field": "education.home_learning_need",
+    "priority": "medium",
+    "mandatory": false,
+    "order": 9,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q10",
+    "text_ru": "Оформлена ли у ребёнка инвалидность?",
+    "text_kk": "Балаңызға мүгедектік ресімделген бе?",
+    "hint_ru": "Статус инвалидности определяет, какие услуги соцзащиты добавить в план.",
+    "hint_kk": "Мүгедектік мәртебесі жоспарға әлеуметтік қорғаудың қандай қызметтерін қосу керектігін анықтайды.",
+    "answer_type": "single",
+    "options": [
+      { "code": "no", "label_ru": "Нет", "label_kk": "Жоқ" },
+      { "code": "yes_with_ipr", "label_ru": "Да, есть индивидуальная программа реабилитации", "label_kk": "Иә, жеке оңалту бағдарламасы бар" },
+      { "code": "yes_no_ipr", "label_ru": "Да, программы нет или не знаю", "label_kk": "Иә, бағдарлама жоқ немесе білмеймін" },
+      { "code": "in_progress", "label_ru": "В процессе оформления", "label_kk": "Ресімдеу үдерісінде" }
+    ],
+    "show_if": { "q": "Q02", "op": "eq", "value": "yes" },
+    "profile_field": "disability.status",
+    "priority": "high",
+    "mandatory": false,
+    "order": 10,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q11",
+    "text_ru": "Когда следующее переосвидетельствование?",
+    "text_kk": "Келесі қайта куәландыру қашан?",
+    "hint_ru": "Дата переосвидетельствования нужна, чтобы заранее напомнить о сроке.",
+    "hint_kk": "Қайта куәландыру күні мерзім туралы алдын ала еске салу үшін қажет.",
+    "answer_type": "date_or_unknown",
+    "options": [
+      { "code": "unknown", "label_ru": "Не знаю", "label_kk": "Білмеймін" }
+    ],
+    "show_if": { "q": "Q10", "op": "in", "value": ["yes_with_ipr", "yes_no_ipr"] },
+    "profile_field": "disability.review_date",
+    "priority": "medium",
+    "mandatory": false,
+    "order": 11,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q12",
+    "text_ru": "Какие выплаты семья получает сейчас?",
+    "text_kk": "Отбасы қазір қандай төлемдер алады?",
+    "hint_ru": "Это помогает понять, нужно ли добавить шаг по оформлению выплат.",
+    "hint_kk": "Бұл төлемдерді ресімдеу қадамын қосу керек пе, соны түсінуге көмектеседі.",
+    "answer_type": "multi",
+    "options": [
+      { "code": "child_disability", "label_ru": "По инвалидности ребёнка", "label_kk": "Баланың мүгедектігі бойынша" },
+      { "code": "caregiver", "label_ru": "Лицу, воспитывающему ребёнка с инвалидностью", "label_kk": "Мүгедек баланы тәрбиелеуші адамға" },
+      { "code": "none", "label_ru": "Ничего", "label_kk": "Ешнәрсе" },
+      { "code": "unknown", "label_ru": "Не знаю", "label_kk": "Білмеймін" }
+    ],
+    "show_if": { "q": "Q10", "op": "in", "value": ["yes_with_ipr", "yes_no_ipr"] },
+    "profile_field": "social.benefits",
+    "priority": "medium",
+    "mandatory": false,
+    "order": 12,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q13",
+    "text_ru": "Посещает ли ребёнок коррекционные занятия?",
+    "text_kk": "Балаңыз түзету сабақтарына қатыса ма?",
+    "hint_ru": "Текущая поддержка учитывается, чтобы не дублировать уже посещаемые занятия.",
+    "hint_kk": "Қазіргі қолдау қайталанбас үшін ескеріледі.",
+    "answer_type": "multi",
+    "options": [
+      { "code": "kppk", "label_ru": "Кабинет коррекции", "label_kk": "Түзету кабинеті" },
+      { "code": "rehab", "label_ru": "Реабилитационный центр", "label_kk": "Оңалту орталығы" },
+      { "code": "asd_center", "label_ru": "Центр для детей с РАС", "label_kk": "РАС бар балаларға арналған орталық" },
+      { "code": "private", "label_ru": "Частные специалисты", "label_kk": "Жеке мамандар" },
+      { "code": "none", "label_ru": "Нет", "label_kk": "Жоқ" }
+    ],
+    "show_if": { "q": "Q01", "op": "gte", "value": 1 },
+    "profile_field": "support.current",
+    "priority": "medium",
+    "mandatory": false,
+    "order": 13,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q14",
+    "text_ru": "Какие документы уже есть на руках?",
+    "text_kk": "Қолда қандай құжаттар бар?",
+    "hint_ru": "Отмеченные документы не придётся собирать заново, мы подставим их в нужные шаги.",
+    "hint_kk": "Белгіленген құжаттарды қайта жинаудың қажеті болмайды, біз оларды қажетті қадамдарға қосамыз.",
+    "answer_type": "multi",
+    "options": [
+      { "code": "birth_cert", "label_ru": "Свидетельство о рождении", "label_kk": "Туу туралы куәлік" },
+      { "code": "pmpk_conclusion", "label_ru": "Заключение ПМПК", "label_kk": "ПМПК қорытындысы" },
+      { "code": "disability_conclusion", "label_ru": "Заключение об инвалидности", "label_kk": "Мүгедектік туралы қорытынды" },
+      { "code": "vkk_home", "label_ru": "Заключение ВКК об обучении на дому", "label_kk": "Үйде оқыту туралы ДКК қорытындысы" },
+      { "code": "characteristic", "label_ru": "Характеристика из сада или школы", "label_kk": "Балабақша немесе мектептен мінездеме" },
+      { "code": "medical_extract", "label_ru": "Выписки врачей", "label_kk": "Дәрігерлердің үзінділері" },
+      { "code": "child_works", "label_ru": "Рисунки и работы ребёнка", "label_kk": "Баланың суреттері мен жұмыстары" }
+    ],
+    "show_if": "always",
+    "profile_field": "docs.present",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 14,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q15",
+    "text_ru": "Родился ли ребёнок в Казахстане?",
+    "text_kk": "Бала Қазақстанда туылды ма?",
+    "hint_ru": "Это влияет на то, какая отметка нужна у свидетельства о рождении при подаче на ПМПК.",
+    "hint_kk": "Бұл ПМПК-ға өтініш бергенде туу туралы куәлікке қандай белгі қажет екеніне әсер етеді.",
+    "answer_type": "single",
+    "options": [
+      { "code": "yes", "label_ru": "Да", "label_kk": "Иә" },
+      { "code": "no", "label_ru": "Нет", "label_kk": "Жоқ" }
+    ],
+    "show_if": { "q": "Q14", "op": "not_contains", "value": "birth_cert" },
+    "profile_field": "docs.birth_abroad",
+    "priority": "low",
+    "mandatory": false,
+    "order": 15,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q16",
+    "text_ru": "Замечали ли вы за последние месяцы что-то из этого?",
+    "text_kk": "Соңғы айларда мыналардың бірін байқадыңыз ба?",
+    "hint_ru": "Эти ситуации требуют срочной консультации врача, это не оценка развития ребёнка.",
+    "hint_kk": "Бұл жағдайлар дәрігердің шұғыл кеңесін қажет етеді, бұл баланың дамуын бағалау емес.",
+    "answer_type": "multi",
+    "options": [
+      { "code": "regression", "label_ru": "Перестал делать то, что уже умел", "label_kk": "Бұрын білетінін істемей қалды" },
+      { "code": "seizures", "label_ru": "Судороги или потеря сознания", "label_kk": "Құрысу немесе есінен тану" },
+      { "code": "danger", "label_ru": "Поведение, опасное для себя или других", "label_kk": "Өзіне немесе басқаларға қауіпті мінез-құлық" },
+      { "code": "none", "label_ru": "Ничего из этого", "label_kk": "Осылардың ешқайсысы" }
+    ],
+    "show_if": "always",
+    "profile_field": "red_flags",
+    "priority": "mandatory",
+    "mandatory": true,
+    "order": 16,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q17",
+    "text_ru": "Что сейчас беспокоит больше всего?",
+    "text_kk": "Қазір сізді ең көп не мазалайды?",
+    "hint_ru": "Свободный ответ помогает уточнить, что важно для семьи прямо сейчас.",
+    "hint_kk": "Еркін жауап отбасы үшін қазір не маңызды екенін нақтылауға көмектеседі.",
+    "answer_type": "text",
+    "max_length": 500,
+    "options": [],
+    "show_if": "filler",
+    "profile_field": "concerns",
+    "priority": "low",
+    "mandatory": false,
+    "order": 17,
+    "source_ids": [],
+    "needs_review": true
+  },
+  {
+    "id": "Q18",
+    "text_ru": "С чем нужна помощь в первую очередь?",
+    "text_kk": "Ең алдымен немен көмек керек?",
+    "hint_ru": "Это помогает расставить приоритеты в объяснениях шагов плана.",
+    "hint_kk": "Бұл жоспар қадамдарының түсіндірмелерінде басымдықтарды анықтауға көмектеседі.",
+    "answer_type": "single",
+    "options": [
+      { "code": "where_to_go", "label_ru": "Понять, куда идти", "label_kk": "Қайда баруды түсіну" },
+      { "code": "kindergarten_school", "label_ru": "Сад или школа", "label_kk": "Балабақша немесе мектеп" },
+      { "code": "specialists", "label_ru": "Занятия со специалистами", "label_kk": "Мамандармен сабақтар" },
+      { "code": "disability_benefits", "label_ru": "Инвалидность и выплаты", "label_kk": "Мүгедектік және төлемдер" },
+      { "code": "documents", "label_ru": "Документы", "label_kk": "Құжаттар" }
+    ],
+    "show_if": "filler",
+    "profile_field": "priority_focus",
+    "priority": "low",
+    "mandatory": false,
+    "order": 18,
+    "source_ids": [],
+    "needs_review": true
+  }
+]

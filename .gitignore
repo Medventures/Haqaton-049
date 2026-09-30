@@ -6,3 +6,11 @@ dist
 .env.*
 !.env.example
 .claude/settings.local.json
+
+# Python (apps/api)
+apps/api/.venv
+apps/api/__pycache__
+apps/api/**/__pycache__
+apps/api/.pytest_cache
+apps/api/aqylroute.db
+*.pyc

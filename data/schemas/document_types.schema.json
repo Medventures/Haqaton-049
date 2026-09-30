@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aqylroute.local/schemas/document_types.schema.json",
+  "title": "AqylRoute document types",
+  "type": "array",
+  "minItems": 1,
+  "items": { "$ref": "#/definitions/document_type" },
+  "definitions": {
+    "document_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "doc_type", "title_ru", "title_kk", "validity_ru", "validity_kk",
+        "issuer_ru", "issuer_kk", "note_ru", "note_kk", "needs_review"
+      ],
+      "properties": {
+        "doc_type": {
+          "type": "string",
+          "enum": [
+            "birth_cert", "pmpk_conclusion", "disability_conclusion", "ipr",
+            "vkk_home", "characteristic", "medical_extract", "child_works",
+            "medical_card_052", "parent_id"
+          ]
+        },
+        "title_ru": { "type": "string", "minLength": 1 },
+        "title_kk": { "type": "string", "minLength": 1 },
+        "validity_ru": { "type": "string", "minLength": 1 },
+        "validity_kk": { "type": "string", "minLength": 1 },
+        "issuer_ru": { "type": "string", "minLength": 1 },
+        "issuer_kk": { "type": "string", "minLength": 1 },
+        "note_ru": { "type": ["string", "null"] },
+        "note_kk": { "type": ["string", "null"] },
+        "needs_review": { "type": "boolean" }
+      }
+    }
+  }
+}

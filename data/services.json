@@ -1,0 +1,318 @@
+[
+  {
+    "service_id": "MED_URGENT",
+    "title_ru": "Срочная консультация врача",
+    "title_kk": "Дәрігердің шұғыл кеңесі",
+    "agency": "medicine",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": [],
+      "if_present": ["medical_extract"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 3 },
+    "sla_verified": false,
+    "sla_verified_note": "TODO(mentor): срок не из источника, а правило безопасности сервиса",
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — срочная консультация врача. Обратитесь как можно скорее, врач оценит ситуацию и подскажет дальнейшие действия.",
+    "explanation_template_kk": "Бұл қадам — дәрігердің шұғыл кеңесі. Мүмкіндігінше тезірек хабарласыңыз, дәрігер жағдайды бағалап, келесі қадамдарды айтады.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "MED_DEV_CONSULT",
+    "title_ru": "Консультация врача-специалиста по развитию ребёнка (через поликлинику)",
+    "title_kk": "Баланың дамуы бойынша маман дәрігердің кеңесі (емхана арқылы)",
+    "agency": "medicine",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": ["birth_cert"],
+      "if_present": ["medical_extract"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — консультация врача-специалиста по развитию ребёнка через поликлинику. По итогам вы получите рекомендации для дальнейшего маршрута.",
+    "explanation_template_kk": "Бұл қадам — баланың дамуы бойынша маман дәрігердің емхана арқылы кеңесі. Нәтижесінде келесі бағыт бойынша ұсынымдар аласыз.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "MED_VKK_HOME",
+    "title_ru": "Заключение ВКК о необходимости обучения на дому",
+    "title_kk": "Үйде оқыту қажеттігі туралы ДКК қорытындысы",
+    "agency": "medicine",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": [],
+      "if_present": ["medical_extract"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — получение заключения врачебно-консультационной комиссии о необходимости обучения на дому. Документ понадобится для организации обучения ребёнка дома.",
+    "explanation_template_kk": "Бұл қадам — үйде оқыту қажеттігі туралы дәрігерлік-кеңестік комиссия қорытындысын алу. Құжат баланы үйде оқытуды ұйымдастыру үшін қажет болады.",
+    "source_ids": ["SRC_ADILET_223"],
+    "provider_ids": []
+  },
+  {
+    "service_id": "MED_MSE_REFERRAL",
+    "title_ru": "Направление на медико-социальную экспертизу",
+    "title_kk": "Медициналық-әлеуметтік сараптамаға жолдама",
+    "agency": "medicine",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": [],
+      "if_present": ["medical_extract"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — направление на медико-социальную экспертизу. Вопрос об инвалидности решается вместе с врачом, направление станет основанием для дальнейшего освидетельствования.",
+    "explanation_template_kk": "Бұл қадам — медициналық-әлеуметтік сараптамаға жолдама алу. Мүгедектік мәселесі дәрігермен бірге шешіледі, жолдама әрі қарай куәландыру үшін негіз болады.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "EDU_EARLY_HELP",
+    "title_ru": "Служба ранней помощи",
+    "title_kk": "Ерте көмек қызметі",
+    "agency": "education",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": ["birth_cert"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": { "max_age": 3, "note": "TODO(mentor): точная возрастная граница службы ранней помощи не определена спецификацией" },
+    "explanation_template_ru": "Этот шаг — служба ранней помощи для детей раннего возраста. Специалисты службы предложат поддержку и подскажут дальнейшие шаги.",
+    "explanation_template_kk": "Бұл қадам — кіші жастағы балаларға арналған ерте көмек қызметі. Қызмет мамандары қолдау ұсынып, келесі қадамдарды айтады.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "EDU_CHARACTERISTIC",
+    "title_ru": "Психолого-педагогическая характеристика из сада или школы",
+    "title_kk": "Балабақша немесе мектептен психологиялық-педагогикалық мінездеме",
+    "agency": "education",
+    "responsible": "education_org",
+    "predecessors_any": [],
+    "documents": {
+      "required": [],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 14 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — получение психолого-педагогической характеристики в саду или школе. Она понадобится для обследования ПМПК.",
+    "explanation_template_kk": "Бұл қадам — балабақша немесе мектептен психологиялық-педагогикалық мінездеме алу. Ол ПМПК тексеруі үшін қажет болады.",
+    "source_ids": ["SRC_ADILET_223"],
+    "provider_ids": []
+  },
+  {
+    "service_id": "EDU_PMPK",
+    "title_ru": "Обследование ПМПК",
+    "title_kk": "ПМПК тексеруі",
+    "agency": "education",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": ["birth_cert"],
+      "if_present": ["disability_conclusion", "vkk_home"],
+      "on_request": ["characteristic", "child_works"],
+      "agency_requests": ["medical_card_052"]
+    },
+    "sla": { "type": "days", "value": 32 },
+    "sla_verified": true,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — обследование в ПМПК. По итогам вы получите заключение с рекомендациями по обучению и сопровождению ребёнка.",
+    "explanation_template_kk": "Бұл қадам — ПМПК-да тексеруден өту. Нәтижесінде баланы оқыту және сүйемелдеу бойынша ұсынымдары бар қорытынды аласыз.",
+    "source_ids": ["SRC_ADILET_223"],
+    "provider_ids": ["PRV_KAR_PMPK"]
+  },
+  {
+    "service_id": "EDU_PMPK_RENEW",
+    "title_ru": "Пересмотр заключения ПМПК",
+    "title_kk": "ПМПК қорытындысын қайта қарау",
+    "agency": "education",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": ["birth_cert", "pmpk_conclusion"],
+      "if_present": ["disability_conclusion", "vkk_home"],
+      "on_request": ["characteristic", "child_works"],
+      "agency_requests": ["medical_card_052"]
+    },
+    "sla": { "type": "before_field", "field": "pmpk.valid_until", "days": 30 },
+    "sla_verified": true,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — пересмотр действующего заключения ПМПК. Стоит пройти его заранее, чтобы поддержка ребёнка не прерывалась.",
+    "explanation_template_kk": "Бұл қадам — қолданыстағы ПМПК қорытындысын қайта қарау. Баланың қолдауы үзілмес үшін оны алдын ала өткен жөн.",
+    "source_ids": ["SRC_ADILET_223", "SRC_INKARAGANDA"],
+    "provider_ids": ["PRV_KAR_PMPK"]
+  },
+  {
+    "service_id": "EDU_ASSISTANT",
+    "title_ru": "Педагог-ассистент в саду или школе",
+    "title_kk": "Балабақша немесе мектептегі педагог-ассистент",
+    "agency": "education",
+    "responsible": "education_org",
+    "predecessors_any": ["EDU_PMPK", "EDU_PMPK_RENEW"],
+    "documents": {
+      "required": ["pmpk_conclusion"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — оформление педагога-ассистента в саду или школе по рекомендации ПМПК. Ассистент будет сопровождать ребёнка в учебном процессе.",
+    "explanation_template_kk": "Бұл қадам — ПМПК ұсынымы бойынша балабақша немесе мектепте педагог-ассистентті ресімдеу. Ассистент баланы оқу үдерісінде сүйемелдейді.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "EDU_KPPK",
+    "title_ru": "Зачисление в кабинет психолого-педагогической коррекции",
+    "title_kk": "Психологиялық-педагогикалық түзету кабинетіне тіркелу",
+    "agency": "education",
+    "responsible": "parent",
+    "predecessors_any": ["EDU_PMPK", "EDU_PMPK_RENEW"],
+    "documents": {
+      "required": ["pmpk_conclusion"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — зачисление в кабинет психолого-педагогической коррекции по рекомендации ПМПК. Там с ребёнком будут заниматься по индивидуальному плану.",
+    "explanation_template_kk": "Бұл қадам — ПМПК ұсынымы бойынша психологиялық-педагогикалық түзету кабинетіне тіркелу. Онда баламен жеке жоспар бойынша шұғылданады.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "EDU_ENROLL",
+    "title_ru": "Зачисление в сад или школу с учётом рекомендаций",
+    "title_kk": "Ұсынымдарды ескере отырып балабақша немесе мектепке тіркелу",
+    "agency": "education",
+    "responsible": "parent",
+    "predecessors_any": ["EDU_PMPK", "EDU_PMPK_RENEW"],
+    "documents": {
+      "required": ["pmpk_conclusion", "birth_cert"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — зачисление в сад или школу с учётом рекомендаций из заключения ПМПК.",
+    "explanation_template_kk": "Бұл қадам — ПМПК қорытындысындағы ұсынымдарды ескере отырып, балабақша немесе мектепке тіркелу.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "SOC_MSE",
+    "title_ru": "Освидетельствование МСЭ, индивидуальная программа реабилитации",
+    "title_kk": "МӘС куәландыруы, жеке оңалту бағдарламасы",
+    "agency": "social",
+    "responsible": "parent",
+    "predecessors_any": ["MED_MSE_REFERRAL"],
+    "documents": {
+      "required": ["medical_extract"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — освидетельствование медико-социальной экспертизой. Вопрос об инвалидности решается вместе с врачом, по итогам оформляется индивидуальная программа реабилитации.",
+    "explanation_template_kk": "Бұл қадам — медициналық-әлеуметтік сараптамадан куәландырудан өту. Мүгедектік мәселесі дәрігермен бірге шешіледі, нәтижесінде жеке оңалту бағдарламасы ресімделеді.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "SOC_DISABILITY_REVIEW",
+    "title_ru": "Переосвидетельствование",
+    "title_kk": "Қайта куәландыру",
+    "agency": "social",
+    "responsible": "parent",
+    "predecessors_any": [],
+    "documents": {
+      "required": ["disability_conclusion"],
+      "if_present": ["medical_extract"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "before_field", "field": "disability.review_date", "days": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — плановое переосвидетельствование инвалидности. Пройдите его заранее, чтобы выплаты и программа реабилитации не прерывались.",
+    "explanation_template_kk": "Бұл қадам — мүгедектікті жоспарлы қайта куәландыру. Төлемдер мен оңалту бағдарламасы үзілмес үшін оны алдын ала өткен жөн.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "SOC_BENEFITS",
+    "title_ru": "Оформление выплат",
+    "title_kk": "Төлемдерді ресімдеу",
+    "agency": "social",
+    "responsible": "parent",
+    "predecessors_any": ["SOC_MSE"],
+    "documents": {
+      "required": ["disability_conclusion"],
+      "if_present": [],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — оформление положенных семье выплат по инвалидности ребёнка.",
+    "explanation_template_kk": "Бұл қадам — баланың мүгедектігі бойынша отбасыға тиесілі төлемдерді ресімдеу.",
+    "source_ids": [],
+    "provider_ids": []
+  },
+  {
+    "service_id": "SOC_REHAB",
+    "title_ru": "Реабилитационный центр или центр поддержки детей с РАС",
+    "title_kk": "Оңалту орталығы немесе РАС бар балаларға қолдау көрсету орталығы",
+    "agency": "social",
+    "responsible": "parent",
+    "predecessors_any": ["EDU_PMPK", "EDU_PMPK_RENEW", "SOC_MSE"],
+    "documents": {
+      "required": [],
+      "if_present": ["pmpk_conclusion", "ipr"],
+      "on_request": [],
+      "agency_requests": []
+    },
+    "sla": { "type": "days", "value": 30 },
+    "sla_verified": false,
+    "age_window": null,
+    "explanation_template_ru": "Этот шаг — зачисление в реабилитационный центр или центр поддержки детей с РАС. Там ребёнку предложат регулярные занятия со специалистами.",
+    "explanation_template_kk": "Бұл қадам — оңалту орталығына немесе РАС бар балаларға қолдау көрсету орталығына тіркелу. Онда балаға мамандармен тұрақты сабақтар ұсынылады.",
+    "source_ids": [],
+    "provider_ids": []
+  }
+]

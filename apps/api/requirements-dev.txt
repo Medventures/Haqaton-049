@@ -1,0 +1,4 @@
+# Зависимости для проверок этапа 0 (docs/SPEC.md, раздел 3).
+# Полный requirements.txt (FastAPI, SQLAlchemy, Alembic и т.д.) появится на этапе 1.
+pytest==9.1.1
+jsonschema==4.26.0

@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aqylroute.local/schemas/questions.schema.json",
+  "title": "AqylRoute questions bank",
+  "type": "array",
+  "minItems": 1,
+  "items": { "$ref": "#/definitions/question" },
+  "definitions": {
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "text_ru", "text_kk", "hint_ru", "hint_kk", "answer_type",
+        "options", "show_if", "profile_field", "priority", "mandatory",
+        "order", "source_ids", "needs_review"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^Q(0[1-9]|1[0-8])$" },
+        "text_ru": { "type": "string", "minLength": 1 },
+        "text_kk": { "type": "string", "minLength": 1 },
+        "hint_ru": { "type": "string", "minLength": 1 },
+        "hint_kk": { "type": "string", "minLength": 1 },
+        "answer_type": {
+          "type": "string",
+          "enum": ["number", "single", "multi", "date_or_unknown", "text"]
+        },
+        "min": { "type": "integer" },
+        "max": { "type": "integer" },
+        "max_length": { "type": "integer" },
+        "options": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/option" }
+        },
+        "show_if": { "$ref": "#/definitions/show_if" },
+        "profile_field": { "type": "string", "minLength": 1 },
+        "priority": {
+          "type": "string",
+          "enum": ["mandatory", "high", "medium", "low"]
+        },
+        "mandatory": { "type": "boolean" },
+        "order": { "type": "integer", "minimum": 1 },
+        "source_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "needs_review": { "type": "boolean" }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "label_ru", "label_kk"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "label_ru": { "type": "string", "minLength": 1 },
+        "label_kk": { "type": "string", "minLength": 1 }
+      }
+    },
+    "show_if": {
+      "oneOf": [
+        { "const": "always" },
+        { "const": "filler" },
+        { "$ref": "#/definitions/leaf_condition" },
+        { "$ref": "#/definitions/any_condition" },
+        { "$ref": "#/definitions/all_condition" }
+      ]
+    },
+    "condition_node": {
+      "oneOf": [
+        { "$ref": "#/definitions/leaf_condition" },
+        { "$ref": "#/definitions/any_condition" },
+        { "$ref": "#/definitions/all_condition" }
+      ]
+    },
+    "leaf_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["q", "op", "value"],
+      "properties": {
+        "q": { "type": "string", "pattern": "^Q(0[1-9]|1[0-8])$" },
+        "op": {
+          "type": "string",
+          "enum": ["eq", "in", "gte", "lt", "contains", "not_contains"]
+        },
+        "value": {}
+      }
+    },
+    "any_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["any"],
+      "properties": {
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/condition_node" }
+        }
+      }
+    },
+    "all_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["all"],
+      "properties": {
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/condition_node" }
+        }
+      }
+    }
+  }
+}

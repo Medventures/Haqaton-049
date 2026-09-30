@@ -1,0 +1,16 @@
+[
+  {
+    "provider_id": "PRV_KAR_PMPK",
+    "name_ru": "КГУ «Карагандинская областная ПМПК»",
+    "name_kk": "«Қарағанды облыстық ПМПК» КММ",
+    "regions": ["karaganda_city", "karaganda_region"],
+    "address_ru": "100008, г. Караганда, мкр. Орбита-1, дом 4, подъезд 8",
+    "address_kk": "100008, Қарағанды қаласы, Орбита-1 ш/а, 4-үй, 8-кіреберіс",
+    "phone": "приёмная 8 (7212) 77-36-74",
+    "booking_methods": ["in_person", "phone", "egov.kz", "malahi24.kz"],
+    "hours_ru": "приём граждан ежедневно 09:00–15:00",
+    "hours_kk": "азаматтарды қабылдау күн сайын 09:00–15:00",
+    "source_ids": ["SRC_KOPMPK"],
+    "needs_review": true
+  }
+]

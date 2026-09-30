@@ -6,11 +6,12 @@ from sqlalchemy.orm import Session
 
 from app import clock
 from app.errors import bad_request, conflict, not_found
-from app.models import Interview
+from app.models import Interview, User
 from app.modules.engine.catalog import get_catalog
 from app.modules.engine.engine import build_plan
 from app.modules.interview import flow
 from app.modules.llm import client as llm_client
+from app.modules.notifications.service import notify
 from app.modules.plans.service import create_draft_plan
 
 LANGS = ("ru", "kk")
@@ -129,4 +130,13 @@ def finish(db: Session, family_id: int) -> dict:
         computed_at=computed_at.isoformat(),
         profile_ref=f"I-{interview.id:03d}",
     )
+
+    from app.models import Family
+
+    family = db.get(Family, family_id)
+    curator = db.get(User, family.curator_id) if family and family.curator_id else None
+    notify(db, curator, "draft_ready", {"family_id": family_id}, ["center", "email"])
+    if any(f != "none" for f in (profile.get("red_flags") or [])):
+        notify(db, curator, "red_flag", {"family_id": family_id, "red_flags": profile["red_flags"]}, ["center", "email"])
+
     return {"done": True, "plan_version": plan.version, "profile": profile}

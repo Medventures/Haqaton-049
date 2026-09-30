@@ -11,7 +11,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.errors import bad_request, conflict, not_found
-from app.models import CasePlan, Family
+from app.models import CasePlan, Family, User
+from app.modules.notifications.service import notify
 from app.modules.plans.transitions import validate_transition
 
 
@@ -100,6 +101,10 @@ def approve_plan(db: Session, family: Family, curator_id: int) -> CasePlan:
     db.add(row)
     db.commit()
     db.refresh(row)
+
+    if family.parent_id:
+        notify(db, db.get(User, family.parent_id), "plan_approved", {"family_id": family.id}, ["center", "email"])
+
     return row
 
 

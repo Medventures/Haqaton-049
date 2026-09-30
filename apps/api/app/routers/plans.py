@@ -12,6 +12,7 @@ from app.errors import not_found
 from app.models import CasePlan, User
 from app.modules.engine.catalog import get_catalog
 from app.modules.plans import service as plans_service
+from app.modules.scheduler.escalation import recompute_family
 
 router = APIRouter(prefix="/plans", tags=["plans"])
 
@@ -33,9 +34,12 @@ class PatchStepRequest(BaseModel):
 def get_plan(family_id: int, db: Session = Depends(get_db), user: User = Depends(require_role("parent", "curator"))):
     if user.role == "parent":
         family = get_family_for_parent(db, family_id, user)
-        plan = plans_service.get_plan_for_parent(db, family, user.id)
     else:
         family = get_family_for_curator(db, family_id, user)
+    recompute_family(db, family, get_catalog())
+    if user.role == "parent":
+        plan = plans_service.get_plan_for_parent(db, family, user.id)
+    else:
         plan = plans_service.get_plan_for_curator(db, family, user.id)
     return plan.plan_json
 

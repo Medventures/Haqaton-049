@@ -1,0 +1,22 @@
+@page {
+  size: A4;
+  margin: 2cm;
+  @bottom-center {
+    content: "Документ сформирован сервисом навигации и не является медицинским заключением · " string(gen-date);
+    font-size: 8pt;
+    color: #666;
+  }
+}
+body {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 11pt;
+  color: #111;
+}
+h1 { font-size: 18pt; margin-bottom: 4pt; }
+h2 { font-size: 13pt; margin-top: 16pt; border-bottom: 1px solid #ccc; padding-bottom: 4pt; }
+.step { margin: 10pt 0; padding: 8pt; border: 1px solid #ddd; border-radius: 4pt; }
+.step .meta { color: #555; font-size: 9pt; }
+.doc-list { margin: 4pt 0; padding-left: 16pt; }
+.gen-date { string-set: gen-date content(); font-size: 0; }
+table { width: 100%; border-collapse: collapse; margin: 8pt 0; }
+th, td { border: 1px solid #ccc; padding: 4pt 6pt; text-align: left; font-size: 9pt; }

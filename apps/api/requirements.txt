@@ -1,6 +1,6 @@
-# Раздел 2 SPEC.md. Стек: Python 3.11+, FastAPI, Pydantic v2, SQLAlchemy 2,
-# Alembic, PyJWT. OpenAI SDK / pdfplumber / pytesseract / WeasyPrint /
-# APScheduler появятся на этапе 2 вместе с реальным LLM- и PDF-модулями.
+# Раздел 2 SPEC.md. pytesseract (OCR сканов) не установлен — нет системного
+# бинаря tesseract в этом окружении, см. docs/OPEN_QUESTIONS.md; извлечение
+# текста ограничено цифровыми PDF через pdfplumber.
 fastapi==0.142.1
 uvicorn[standard]==0.54.0
 pydantic==2.13.5
@@ -10,3 +10,8 @@ SQLAlchemy==2.1.1
 alembic==1.20.0
 PyJWT==2.15.1
 jsonschema==4.26.0
+python-multipart==0.0.20
+openai
+pdfplumber
+weasyprint
+APScheduler

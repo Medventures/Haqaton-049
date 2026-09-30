@@ -23,6 +23,20 @@ ADM автоматизирует и упрощает бюрократическ�
 
 ---
 
+## Демо
+
+На странице входа есть кнопки демо-входа без пароля:
+
+| Аккаунт | Что показывает |
+| :--- | :--- |
+| **Родитель А** (`parent.a@demo.kz`) | Новый маршрут: интервью с нуля, затем ожидание проверки куратором |
+| **Родитель Б** (`parent.b@demo.kz`) | Готовый план, подсказки к шагам, календарь, напоминания, документы |
+| **Куратор** (`curator@demo.kz`) | Проверка и подтверждение плана, просрочки, демо-панель сдвига времени |
+
+Пароль для обычного входа задаётся переменной `DEMO_PASSWORD`. Пошаговый сценарий показа описан в `docs/DEMO_SCENARIO.md`.
+
+---
+
 ## Архитектура и Структура проекта
 
 * `apps/web` (Next.js) — пользовательский интерфейс на русском и казахском. Пошаговое интервью по разделам. Кабинет родителя (план, шаг с подсказкой, календарь, напоминания, документы) и кабинет куратора (семьи, проверка плана, просрочки). Поддерживает установку в качестве PWA-приложения на телефон с оффлайн-доступом к последнему плану.
@@ -43,6 +57,33 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 OPENAI_API_KEY=your_openai_api_key
 ```
+
+---
+
+## Запуск
+
+Требования: Python 3.11, Node.js 22.
+
+```bash
+# Backend (FastAPI)
+cd apps/api
+pip install -r requirements.txt
+python -m alembic upgrade head   # миграции БД
+python -m app.seed               # демо-аккаунты и кейсы (нужен DEMO_PASSWORD)
+uvicorn app.main:app --port 8000
+
+# Frontend (Next.js), во втором терминале
+cd apps/web
+npm ci
+npm run dev                      # http://localhost:3000, запросы /api идут на :8000
+
+# Автотесты
+cd apps/api
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+Деплой одним контейнером: render.com → New → Blueprint → этот репозиторий (`render.yaml`, `deploy/Dockerfile`). Другие варианты — `docs/DEPLOY.md`.
 
 ---
 
